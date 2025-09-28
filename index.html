@@ -29,9 +29,23 @@
             color: white;
             padding: 20px;
             cursor: pointer;
+            transition: all 0.8s ease;
+        }
+
+        body.sunny-theme {
+            background: linear-gradient(45deg, #ff9a00, #ff6a00, #ffd700, #ff8c00);
+            background-size: 400% 400%;
+            animation: sunnyShift 15s ease infinite;
+            color: #333;
         }
 
         @keyframes galaxyShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes sunnyShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
@@ -48,6 +62,11 @@
             transform: translateY(-50%) rotate(15deg);
             z-index: 1;
             opacity: 0.3;
+            transition: all 0.8s ease;
+        }
+
+        .sunny-theme .milky-way {
+            opacity: 0;
         }
 
         .milky-way-2 {
@@ -60,6 +79,78 @@
             transform: translateY(-50%) rotate(-10deg);
             z-index: 1;
             opacity: 0.2;
+            transition: all 0.8s ease;
+        }
+
+        .sunny-theme .milky-way-2 {
+            opacity: 0;
+        }
+
+        /* Sunny Background Elements */
+        .sun-rays {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,0,0.3) 0%, rgba(255,255,0,0) 70%);
+            top: 10%;
+            right: 10%;
+            border-radius: 50%;
+            z-index: 1;
+            opacity: 0;
+            transition: all 0.8s ease;
+        }
+
+        .sunny-theme .sun-rays {
+            opacity: 0.6;
+            animation: sunPulse 4s infinite alternate;
+        }
+
+        @keyframes sunPulse {
+            0% { transform: scale(1); opacity: 0.4; }
+            100% { transform: scale(1.2); opacity: 0.7; }
+        }
+
+        .cloud {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50px;
+            z-index: 1;
+            opacity: 0;
+            transition: all 0.8s ease;
+            animation: cloudFloat 20s infinite linear;
+        }
+
+        .sunny-theme .cloud {
+            opacity: 0.7;
+        }
+
+        .cloud-1 {
+            width: 120px;
+            height: 40px;
+            top: 20%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .cloud-2 {
+            width: 100px;
+            height: 35px;
+            top: 30%;
+            right: 10%;
+            animation-delay: 5s;
+        }
+
+        .cloud-3 {
+            width: 80px;
+            height: 30px;
+            top: 60%;
+            left: 15%;
+            animation-delay: 10s;
+        }
+
+        @keyframes cloudFloat {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(calc(100vw + 100px)); }
         }
 
         /* Animated stars */
@@ -69,6 +160,11 @@
             height: 100%;
             pointer-events: none;
             z-index: 2;
+            transition: all 0.8s ease;
+        }
+
+        .sunny-theme .stars {
+            opacity: 0;
         }
 
         .star {
@@ -110,6 +206,15 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: 3px;
+            transition: all 0.8s ease;
+        }
+
+        .sunny-theme h1 {
+            background: linear-gradient(45deg, #ff4500, #ff8c00, #ffd700, #ff6347);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
         }
 
         .key-container {
@@ -147,6 +252,14 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
+        .sunny-theme .key-display {
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 140, 0, 0.3);
+            color: #ff4500;
+            text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.2);
+        }
+
         .key-display::before {
             content: '';
             position: absolute;
@@ -156,6 +269,10 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.2), transparent);
             animation: scanline 3s infinite;
+        }
+
+        .sunny-theme .key-display::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 69, 0, 0.2), transparent);
         }
 
         @keyframes scanline {
@@ -184,6 +301,11 @@
             font-weight: 700;
         }
 
+        .sunny-theme .copy-btn {
+            background: linear-gradient(45deg, #ff8c00, #ff4500);
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.3);
+        }
+
         .copy-btn.show {
             opacity: 1;
             transform: scale(1);
@@ -192,6 +314,10 @@
         .copy-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 15px 40px rgba(6, 255, 165, 0.5);
+        }
+
+        .sunny-theme .copy-btn:hover {
+            box-shadow: 0 15px 40px rgba(255, 140, 0, 0.5);
         }
 
         .copy-btn:active {
@@ -227,9 +353,18 @@
             max-width: 350px;
         }
 
+        .sunny-theme .generate-btn {
+            background: linear-gradient(45deg, #ff4500, #ff8c00);
+            box-shadow: 0 10px 30px rgba(255, 69, 0, 0.3);
+        }
+
         .generate-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 40px rgba(255, 0, 110, 0.5);
+        }
+
+        .sunny-theme .generate-btn:hover {
+            box-shadow: 0 15px 40px rgba(255, 69, 0, 0.5);
         }
 
         .generate-btn:active {
@@ -260,6 +395,50 @@
             border: 1px solid rgba(255, 107, 107, 0.3);
         }
 
+        .sunny-theme .cooldown-timer {
+            background: rgba(255, 255, 255, 0.3);
+            color: #ff4500;
+            border: 1px solid rgba(255, 69, 0, 0.3);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 12px 25px;
+            color: white;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sunny-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.3);
+            color: #333;
+            border: 1px solid rgba(255, 140, 0, 0.3);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .sunny-theme .theme-toggle:hover {
+            box-shadow: 0 12px 35px rgba(255, 140, 0, 0.3);
+        }
+
         /* Click Ripple Effect */
         .ripple {
             position: absolute;
@@ -269,6 +448,10 @@
             animation: ripple-animation 0.6s linear;
             pointer-events: none;
             z-index: 100;
+        }
+
+        .sunny-theme .ripple {
+            background: rgba(255, 140, 0, 0.3);
         }
 
         @keyframes ripple-animation {
@@ -285,8 +468,95 @@
             100% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 255, 136, 0.4); }
         }
 
+        .sunny-theme .key-generation-effect {
+            animation: sunnyKeyGeneration 1s ease;
+        }
+
+        @keyframes sunnyKeyGeneration {
+            0% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 69, 0, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 69, 0, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 69, 0, 0.4); }
+        }
+
         .key-generation-effect {
             animation: keyGeneration 1s ease;
+        }
+
+        /* Sunny Doodles */
+        .sunny-doodle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0;
+            transition: all 0.8s ease;
+        }
+
+        .sunny-theme .sunny-doodle {
+            opacity: 0.7;
+        }
+
+        .sunglasses {
+            width: 60px;
+            height: 20px;
+            background: #333;
+            border-radius: 10px 10px 0 0;
+            position: relative;
+        }
+
+        .sunglasses::before, .sunglasses::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border: 3px solid #333;
+            border-radius: 50%;
+            top: -5px;
+        }
+
+        .sunglasses::before {
+            left: 0;
+        }
+
+        .sunglasses::after {
+            right: 0;
+        }
+
+        .ice-cream {
+            width: 40px;
+            height: 60px;
+            background: #ff69b4;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+
+        .ice-cream::before {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 20px;
+            background: #8b4513;
+            border-radius: 10px;
+            bottom: -20px;
+            left: -5px;
+        }
+
+        .palm-tree {
+            width: 10px;
+            height: 80px;
+            background: #8b4513;
+            position: relative;
+        }
+
+        .palm-tree::before {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 40px;
+            background: #228b22;
+            border-radius: 50%;
+            top: -30px;
+            left: -25px;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
         }
 
         /* Improved Rocket Doodle */
@@ -296,6 +566,11 @@
             z-index: 5;
             opacity: 0.8;
             animation: rocketFloat 25s infinite linear;
+            transition: all 0.8s ease;
+        }
+
+        .sunny-theme .rocket-doodle {
+            opacity: 0;
         }
 
         .rocket-body {
@@ -368,6 +643,11 @@
             pointer-events: none;
             z-index: 3;
             opacity: 0.4;
+            transition: all 0.8s ease;
+        }
+
+        .sunny-theme .static-planet {
+            opacity: 0;
         }
 
         .static-planet-1 {
@@ -427,6 +707,10 @@
             filter: blur(2px);
         }
 
+        .sunny-theme .particle::before {
+            background: radial-gradient(circle, rgba(255,255,0,0.8) 0%, rgba(255,255,0,0) 70%);
+        }
+
         @keyframes floatParticle {
             0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 0; }
             10% { opacity: 1; }
@@ -440,6 +724,11 @@
             pointer-events: none;
             z-index: 4;
             opacity: 0.3;
+            transition: all 0.8s ease;
+        }
+
+        .sunny-theme .space-doodle {
+            opacity: 0;
         }
 
         .moving-planet {
@@ -506,6 +795,12 @@
             box-shadow: 0 10px 30px rgba(6, 255, 165, 0.5);
         }
 
+        .sunny-theme .success-message {
+            background: rgba(255, 140, 0, 0.9);
+            color: white;
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.5);
+        }
+
         .success-message.show {
             opacity: 1;
         }
@@ -541,6 +836,12 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
 
+        .sunny-theme .social-btn {
+            background: rgba(255, 255, 255, 0.3);
+            color: #333;
+            border: 1px solid rgba(255, 140, 0, 0.3);
+        }
+
         .social-btn::before {
             content: '';
             position: absolute;
@@ -550,6 +851,10 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
+        }
+
+        .sunny-theme .social-btn::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 140, 0, 0.2), transparent);
         }
 
         .social-btn:hover::before {
@@ -562,20 +867,14 @@
             box-shadow: 0 8px 25px rgba(0, 162, 255, 0.3);
         }
 
-        .roblox-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(0, 162, 255, 0.5);
-        }
-
         .discord-btn {
             background: linear-gradient(45deg, #7289da, #5865f2);
             border: 1px solid rgba(114, 137, 218, 0.3);
             box-shadow: 0 8px 25px rgba(114, 137, 218, 0.3);
         }
 
-        .discord-btn:hover {
+        .social-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(114, 137, 218, 0.5);
         }
 
         .btn-icon {
@@ -632,6 +931,13 @@
                 font-size: 1.1rem;
                 padding: 15px 25px;
             }
+            
+            .theme-toggle {
+                top: 20px;
+                right: 20px;
+                padding: 10px 20px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -640,10 +946,27 @@
     <div class="milky-way"></div>
     <div class="milky-way-2"></div>
     
+    <!-- Sunny Background Elements -->
+    <div class="sun-rays"></div>
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    
     <!-- Static space elements -->
     <div class="static-planet static-planet-1"></div>
     <div class="static-planet static-planet-2"></div>
     <div class="static-planet static-planet-3"></div>
+    
+    <!-- Sunny Doodles -->
+    <div class="sunny-doodle" style="top: 15%; left: 10%;">
+        <div class="sunglasses"></div>
+    </div>
+    <div class="sunny-doodle" style="top: 75%; right: 15%;">
+        <div class="ice-cream"></div>
+    </div>
+    <div class="sunny-doodle" style="bottom: 10%; left: 20%;">
+        <div class="palm-tree"></div>
+    </div>
     
     <!-- Improved Rocket Doodle -->
     <div class="rocket-doodle" style="top: 20%; left: 15%;">
@@ -665,6 +988,11 @@
     </div>
 
     <div class="stars" id="stars"></div>
+    
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-sun"></i> Sunny Theme
+    </button>
     
     <div class="social-buttons">
         <a href="https://www.roblox.com/search/users?keyword=bacononlyte" class="social-btn roblox-btn" target="_blank">
@@ -706,22 +1034,35 @@
     </div>
 
     <script>
-        // Special IP addresses that bypass cooldown
+        // Special IP addresses that bypass cooldown - YOUR IPs
         const specialIPs = [
             '210.23.161.56',
-            '2001:4860:7:80c::ee'
+            '2001:4454:3a4:ca00:28c7:3c7a:a0a1:dccd'
         ];
         
         let currentKey = localStorage.getItem('currentKey') || '';
         let lastGeneratedTime = localStorage.getItem('lastGeneratedTime');
         let cooldownPeriod = 60 * 60 * 1000; // 1 hour in milliseconds
+        let isSunnyTheme = localStorage.getItem('isSunnyTheme') === 'true';
         
-        // Simulated IP detection (in a real implementation, this would come from the server)
+        // Set initial theme
+        if (isSunnyTheme) {
+            document.body.classList.add('sunny-theme');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i> Galaxy Theme';
+        }
+        
+        // Simulated IP detection - In real implementation, this would come from server
         let userIP = localStorage.getItem('userIP') || '192.168.1.1'; // Default IP
         
         // Add click ripple effect to the entire page
         document.body.addEventListener('click', function(e) {
             createRipple(e);
+        });
+        
+        // Theme toggle functionality
+        document.getElementById('themeToggle').addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleTheme();
         });
         
         // Check if cooldown is active on page load
@@ -742,7 +1083,24 @@
                 const copyBtn = document.getElementById('copyBtn');
                 copyBtn.classList.add('show');
             }
+            
+            // Set your IP for testing
+            localStorage.setItem('userIP', '210.23.161.56');
         };
+
+        // Toggle between sunny and galaxy themes
+        function toggleTheme() {
+            isSunnyTheme = !isSunnyTheme;
+            localStorage.setItem('isSunnyTheme', isSunnyTheme);
+            
+            if (isSunnyTheme) {
+                document.body.classList.add('sunny-theme');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i> Galaxy Theme';
+            } else {
+                document.body.classList.remove('sunny-theme');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i> Sunny Theme';
+            }
+        }
 
         // Create ripple effect on click
         function createRipple(e) {
@@ -778,18 +1136,18 @@
         }
 
         function checkSpecialIP() {
-            // In a real implementation, this would check the actual user IP
-            // For demo purposes, we'll check if the user has set a special IP in localStorage
+            // Check if the user has a special IP
             const storedIP = localStorage.getItem('userIP');
             
             if (storedIP && specialIPs.includes(storedIP)) {
                 // Special IP - no cooldown
-                console.log('Special IP detected - cooldown disabled');
-                return;
+                console.log('Special IP detected - cooldown disabled for IP: ' + storedIP);
+                return true;
             }
             
             // Regular IP - check cooldown
             checkCooldown();
+            return false;
         }
 
         function checkCooldown() {
@@ -852,8 +1210,7 @@
 
         function generateKey() {
             // Check if user has special IP (no cooldown)
-            const storedIP = localStorage.getItem('userIP');
-            const isSpecialIP = storedIP && specialIPs.includes(storedIP);
+            const isSpecialIP = checkSpecialIP();
             
             const randomPart = generateRandomString(15);
             currentKey = `KEY-ASURA-${randomPart}`;
@@ -865,6 +1222,7 @@
             keyDisplay.textContent = currentKey;
             
             // Add key generation animation
+            const animationClass = isSunnyTheme ? 'sunnyKeyGeneration' : 'keyGeneration';
             keyDisplay.classList.add('key-generation-effect');
             setTimeout(() => {
                 keyDisplay.classList.remove('key-generation-effect');
@@ -912,6 +1270,8 @@
         }
 
         function createSpaceDoodle() {
+            if (document.body.classList.contains('sunny-theme')) return;
+            
             const types = ['moving-planet', 'asteroid', 'satellite'];
             const type = types[Math.floor(Math.random() * types.length)];
             const animations = ['spaceDriftHorizontal', 'spaceDriftVertical', 'spaceDriftDiagonal'];
@@ -990,20 +1350,6 @@
                 
                 document.body.appendChild(particle);
             }
-        }
-        
-        // Demo function to simulate setting a special IP
-        function setSpecialIP() {
-            localStorage.setItem('userIP', '210.23.161.56');
-            alert('Special IP set! Cooldown is now disabled for this browser.');
-            location.reload();
-        }
-        
-        // Demo function to reset to regular IP
-        function resetIP() {
-            localStorage.removeItem('userIP');
-            alert('IP reset to regular. Cooldown is now enabled.');
-            location.reload();
         }
     </script>
 </body>
