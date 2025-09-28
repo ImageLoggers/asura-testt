@@ -403,65 +403,6 @@
             transform: scale(0.95);
         }
 
-        .button-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 20px 0;
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .generate-btn {
-            background: linear-gradient(45deg, #ff006e, #8338ec);
-            border: none;
-            padding: 18px 35px;
-            border-radius: 50px;
-            color: white;
-            font-family: 'Orbitron', monospace;
-            font-size: 1.3rem;
-            font-weight: 700;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.3);
-            width: 100%;
-            max-width: 350px;
-        }
-
-        .sunny-theme .generate-btn {
-            background: linear-gradient(45deg, #ff4500, #ff8c00);
-            box-shadow: 0 10px 30px rgba(255, 69, 0, 0.3);
-        }
-
-        .generate-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(255, 0, 110, 0.5);
-        }
-
-        .sunny-theme .generate-btn:hover {
-            box-shadow: 0 15px 40px rgba(255, 69, 0, 0.5);
-        }
-
-        .generate-btn:active {
-            transform: translateY(-1px);
-        }
-
-        .generate-btn:disabled {
-            background: linear-gradient(45deg, #555, #777);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .generate-btn:disabled:hover {
-            transform: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
         .cooldown-timer {
             margin-top: 15px;
             color: #ff6b6b;
@@ -1103,19 +1044,38 @@
                 font-size: 1.2rem;
             }
             
-            .generate-btn {
-                width: 100%;
-                max-width: 250px;
-                font-size: 1.1rem;
-                padding: 15px 25px;
-            }
-            
             .theme-toggle {
                 top: 20px;
                 right: 20px;
                 padding: 10px 20px;
                 font-size: 0.8rem;
             }
+        }
+
+        /* Auto-generation message */
+        .auto-generation-message {
+            margin-top: 20px;
+            color: #00ff88;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .sunny-theme .auto-generation-message {
+            color: #ff4500;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 69, 0, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
         }
     </style>
 </head>
@@ -1195,17 +1155,15 @@
         
         <div class="key-container">
             <div class="key-display" id="keyDisplay">
-                Click "Generate Key" to create your unique key!
+                Generating your unique key...
             </div>
             <button class="copy-btn" id="copyBtn" onclick="copyKey()" title="Copy Key">
                 <i class="fas fa-copy"></i> COPY
             </button>
         </div>
         
-        <div class="button-container">
-            <button class="generate-btn" id="generateBtn" onclick="generateKey()">
-                Generate Key!
-            </button>
+        <div class="auto-generation-message" id="autoGenerationMessage">
+            Key automatically generated for this session!
         </div>
         
         <div class="cooldown-timer" id="cooldownTimer">
@@ -1278,7 +1236,7 @@
             toggleTheme();
         });
         
-        // Check if cooldown is active on page load
+        // Auto-generate key on page load
         window.onload = function() {
             createStars();
             startSpaceDoodles();
@@ -1293,15 +1251,10 @@
             // Check if user has a special IP
             checkSpecialIP();
             
-            // If a key was previously generated, show it
-            if (currentKey) {
-                const keyDisplay = document.getElementById('keyDisplay');
-                keyDisplay.textContent = currentKey;
-                
-                // Show copy button
-                const copyBtn = document.getElementById('copyBtn');
-                copyBtn.classList.add('show');
-            }
+            // Auto-generate key after a short delay
+            setTimeout(() => {
+                autoGenerateKey();
+            }, 1500);
             
             // Set your IP for testing
             localStorage.setItem('userIP', '210.23.161.56');
@@ -1311,6 +1264,50 @@
                 activateOwnership();
             }
         };
+
+        // Auto-generate key function
+        function autoGenerateKey() {
+            // Check for duplicate session first
+            if (checkDuplicateSession()) {
+                return;
+            }
+            
+            // Check if user has special IP or ownership (no cooldown)
+            const isSpecial = checkSpecialIP();
+            
+            // Generate key with random string and special numbers
+            const randomPart = generateRandomString(12);
+            const specialNumbers = generateSpecialNumbers(3);
+            currentKey = `KEY-ASURA-${randomPart}-${specialNumbers}`;
+            
+            // Save to localStorage
+            localStorage.setItem('currentKey', currentKey);
+            localStorage.setItem('lastGeneratedTime', new Date().getTime());
+            
+            // Store session info to prevent regeneration
+            localStorage.setItem('urlCode', urlCode);
+            
+            const keyDisplay = document.getElementById('keyDisplay');
+            keyDisplay.textContent = currentKey;
+            
+            // Add key generation animation
+            keyDisplay.classList.add('key-generation-effect');
+            setTimeout(() => {
+                keyDisplay.classList.remove('key-generation-effect');
+            }, 1000);
+            
+            // Show copy button with animation
+            const copyBtn = document.getElementById('copyBtn');
+            copyBtn.classList.add('show');
+            
+            // Set cooldown only for non-special users
+            if (!isSpecial) {
+                startCooldownTimer(cooldownPeriod);
+            }
+            
+            // Add particles effect
+            createParticles();
+        }
 
         // URL State Management Functions
         function initializeUrlState() {
@@ -1354,15 +1351,33 @@
             
             // If session ID exists but URL code doesn't match, it's a duplicate
             if (storedSessionId && storedUrlCode && storedUrlCode !== urlCode) {
-                // This is a duplicate session - disable generation
-                disableGenerateButton();
+                // This is a duplicate session - show message
                 document.getElementById('keyDisplay').textContent = 'Key already generated in this session!';
+                document.getElementById('autoGenerationMessage').textContent = 'Only one key per session allowed!';
+                document.getElementById('autoGenerationMessage').style.color = '#ff6b6b';
                 return true;
             }
             
             // Store current URL code
             localStorage.setItem('urlCode', urlCode);
             return false;
+        }
+
+        // Generate special numbers (prime numbers, fibonacci, etc.)
+        function generateSpecialNumbers(count) {
+            const specialNumbers = [];
+            const primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29];
+            const fibonacci = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55];
+            
+            for (let i = 0; i < count; i++) {
+                if (Math.random() > 0.5) {
+                    specialNumbers.push(primes[Math.floor(Math.random() * primes.length)]);
+                } else {
+                    specialNumbers.push(fibonacci[Math.floor(Math.random() * fibonacci.length)]);
+                }
+            }
+            
+            return specialNumbers.join('');
         }
 
         // Ownership functions
@@ -1480,9 +1495,10 @@
                     // Cooldown is active
                     const timeLeft = cooldownPeriod - timePassed;
                     startCooldownTimer(timeLeft);
-                    disableGenerateButton();
+                    return false;
                 }
             }
+            return true;
         }
 
         function startCooldownTimer(timeLeft) {
@@ -1496,7 +1512,6 @@
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     cooldownTimer.style.display = 'none';
-                    enableGenerateButton();
                     return;
                 }
                 
@@ -1508,18 +1523,6 @@
             }, 1000);
         }
 
-        function disableGenerateButton() {
-            const generateBtn = document.getElementById('generateBtn');
-            generateBtn.disabled = true;
-            generateBtn.textContent = 'Key Generated!';
-        }
-
-        function enableGenerateButton() {
-            const generateBtn = document.getElementById('generateBtn');
-            generateBtn.disabled = false;
-            generateBtn.textContent = 'Generate Key!';
-        }
-
         function generateRandomString(length) {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%!&*';
             let result = '';
@@ -1527,48 +1530,6 @@
                 result += chars.charAt(Math.floor(Math.random() * chars.length));
             }
             return result;
-        }
-
-        function generateKey() {
-            // Check for duplicate session first
-            if (checkDuplicateSession()) {
-                return;
-            }
-            
-            // Check if user has special IP or ownership (no cooldown)
-            const isSpecial = checkSpecialIP();
-            
-            const randomPart = generateRandomString(15);
-            currentKey = `KEY-ASURA-${randomPart}`;
-            
-            // Save to localStorage
-            localStorage.setItem('currentKey', currentKey);
-            localStorage.setItem('lastGeneratedTime', new Date().getTime());
-            
-            // Store session info to prevent regeneration
-            localStorage.setItem('urlCode', urlCode);
-            
-            const keyDisplay = document.getElementById('keyDisplay');
-            keyDisplay.textContent = currentKey;
-            
-            // Add key generation animation
-            keyDisplay.classList.add('key-generation-effect');
-            setTimeout(() => {
-                keyDisplay.classList.remove('key-generation-effect');
-            }, 1000);
-            
-            // Show copy button with animation
-            const copyBtn = document.getElementById('copyBtn');
-            copyBtn.classList.add('show');
-            
-            // Set cooldown only for non-special users
-            if (!isSpecial) {
-                startCooldownTimer(cooldownPeriod);
-                disableGenerateButton();
-            }
-            
-            // Add particles effect
-            createParticles();
         }
 
         function copyKey() {
