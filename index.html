@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galaxy Key Generator</title>
+    <title>Asura Key System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
@@ -21,10 +21,13 @@
             animation: galaxyShift 20s ease infinite;
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
             position: relative;
+            color: white;
+            padding: 20px;
         }
 
         @keyframes galaxyShift {
@@ -81,42 +84,23 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        .container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 60px 40px;
+        /* Content Area - Clean UI */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            position: relative;
             z-index: 10;
-            max-width: 500px;
-            width: 90%;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
-            border-radius: 22px;
-            z-index: -1;
-            animation: borderGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes borderGlow {
-            0% { opacity: 0.5; }
-            100% { opacity: 1; }
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
         }
 
         h1 {
             color: #ffffff;
             font-family: 'Orbitron', monospace;
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 900;
             margin-bottom: 30px;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
@@ -124,7 +108,6 @@
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-align: center;
             letter-spacing: 3px;
         }
 
@@ -133,6 +116,8 @@
             align-items: center;
             gap: 15px;
             margin: 30px 0;
+            width: 100%;
+            max-width: 500px;
         }
 
         .key-display {
@@ -154,7 +139,6 @@
             position: relative;
             overflow: hidden;
             flex: 1;
-            max-width: 350px;
         }
 
         .key-display::before {
@@ -173,10 +157,10 @@
             100% { left: 100%; }
         }
 
-        .copy-btn-inline {
+        .copy-btn {
             background: linear-gradient(45deg, #06ffa5, #3a86ff);
             border: none;
-            padding: 15px;
+            padding: 15px 20px;
             border-radius: 15px;
             color: white;
             font-size: 1.2rem;
@@ -185,42 +169,44 @@
             box-shadow: 0 10px 30px rgba(6, 255, 165, 0.3);
             opacity: 0;
             transform: scale(0);
-            min-width: 50px;
-            min-height: 50px;
+            min-width: 60px;
+            min-height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .copy-btn-inline.show {
+        .copy-btn.show {
             opacity: 1;
             transform: scale(1);
         }
 
-        .copy-btn-inline:hover {
+        .copy-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 15px 40px rgba(6, 255, 165, 0.5);
         }
 
-        .copy-btn-inline:active {
+        .copy-btn:active {
             transform: scale(0.95);
         }
 
         .button-container {
             display: flex;
-            gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 500px;
         }
 
-        .btn {
-            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        .generate-btn {
+            background: linear-gradient(45deg, #ff006e, #8338ec);
             border: none;
             padding: 15px 30px;
             border-radius: 50px;
             color: white;
             font-family: 'Orbitron', monospace;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
             cursor: pointer;
             position: relative;
@@ -228,40 +214,18 @@
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
-        }
-
-        .btn:active {
-            transform: translateY(-1px);
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .generate-btn {
-            background: linear-gradient(45deg, #ff006e, #8338ec);
             box-shadow: 0 10px 30px rgba(255, 0, 110, 0.3);
+            width: 100%;
+            max-width: 300px;
         }
 
         .generate-btn:hover {
+            transform: translateY(-3px);
             box-shadow: 0 15px 40px rgba(255, 0, 110, 0.5);
+        }
+
+        .generate-btn:active {
+            transform: translateY(-1px);
         }
 
         .generate-btn:disabled {
@@ -279,9 +243,13 @@
         .cooldown-timer {
             margin-top: 15px;
             color: #ff6b6b;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: bold;
             display: none;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
         }
 
         /* Improved Rocket Doodle */
@@ -403,6 +371,32 @@
             left: 2%;
         }
 
+        /* Improved Floating Particles */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 4;
+            border-radius: 50%;
+            animation: floatParticle 15s infinite linear;
+        }
+
+        .particle::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            filter: blur(2px);
+        }
+
+        @keyframes floatParticle {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate(var(--tx, 100px), var(--ty, -100px)) rotate(360deg) scale(0.5); opacity: 0; }
+        }
+
         /* Moving space doodles */
         .space-doodle {
             position: fixed;
@@ -441,29 +435,6 @@
             height: 12px;
             background: #ddd;
             border-radius: 3px;
-        }
-
-        .satellite::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1px;
-            height: 6px;
-            background: #74b9ff;
-        }
-
-        .satellite::after {
-            content: '';
-            position: absolute;
-            left: -6px;
-            top: 1px;
-            width: 5px;
-            height: 1px;
-            background: #fdcb6e;
-            border-radius: 1px;
-            box-shadow: 0 5px 0 #fdcb6e, 12px 0 0 #fdcb6e, 12px 5px 0 #fdcb6e;
         }
 
         @keyframes spaceDriftHorizontal {
@@ -577,20 +548,18 @@
         .btn-text {
             font-family: 'Courier New', monospace;
         }
-        
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: radial-gradient(circle, #fff, transparent);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: float 6s infinite ease-in-out;
-        }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            50% { transform: translateY(-50px) rotate(180deg); opacity: 1; }
+        /* Windows Activation Notice */
+        .windows-notice {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            color: #ccc;
+            z-index: 100;
         }
 
         @media (max-width: 600px) {
@@ -612,10 +581,8 @@
                 font-size: 1.2rem;
             }
             
-            .container {
-                padding: 40px 20px;
-                margin: 20px;
-                margin-top: 80px;
+            h1 {
+                font-size: 2.5rem;
             }
             
             .key-container {
@@ -627,22 +594,13 @@
                 width: 100%;
             }
             
-            .copy-btn-inline {
+            .copy-btn {
                 min-width: 50px;
                 min-height: 50px;
                 font-size: 1.2rem;
             }
             
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .button-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
+            .generate-btn {
                 width: 100%;
                 max-width: 250px;
             }
@@ -681,7 +639,7 @@
     <div class="stars" id="stars"></div>
     
     <div class="social-buttons">
-        <a href="https://www.roblox.com/users/2526681676/profile?friendshipSourceType=PlayerSearch" class="social-btn roblox-btn" target="_blank">
+        <a href="https://www.roblox.com/search/users?keyword=bacononlyte" class="social-btn roblox-btn" target="_blank">
             <span class="btn-icon">R</span>
             <span class="btn-text">Roblox Link</span>
         </a>
@@ -691,26 +649,27 @@
         </a>
     </div>
 
-    <div class="container">
-        <h1>Asura Key</h1>
+    <!-- Clean Content Area -->
+    <div class="content-area">
+        <h1>Asura Key System</h1>
         
         <div class="key-container">
             <div class="key-display" id="keyDisplay">
                 Click "Generate Key" to create your unique key!
             </div>
-            <button class="copy-btn-inline" id="copyBtn" onclick="copyKey()" title="Copy Key">
+            <button class="copy-btn" id="copyBtn" onclick="copyKey()" title="Copy Key">
                 <i class="fas fa-copy"></i>
             </button>
         </div>
         
         <div class="button-container">
-            <button class="btn generate-btn" id="generateBtn" onclick="generateKey()">
+            <button class="generate-btn" id="generateBtn" onclick="generateKey()">
                 Generate Key!
             </button>
         </div>
         
         <div class="cooldown-timer" id="cooldownTimer">
-            Next key available in: <span id="timerDisplay">24:00:00</span>
+            Next key available in: <span id="timerDisplay">01:00:00</span>
         </div>
     </div>
 
@@ -719,15 +678,26 @@
     </div>
 
     <script>
-        let currentKey = '';
+        let currentKey = localStorage.getItem('currentKey') || '';
         let lastGeneratedTime = localStorage.getItem('lastGeneratedTime');
-        let cooldownPeriod = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+        let cooldownPeriod = 60 * 60 * 1000; // 1 hour in milliseconds
 
         // Check if cooldown is active on page load
         window.onload = function() {
             createStars();
             startSpaceDoodles();
+            createParticles();
             checkCooldown();
+            
+            // If a key was previously generated, show it
+            if (currentKey) {
+                const keyDisplay = document.getElementById('keyDisplay');
+                keyDisplay.textContent = currentKey;
+                
+                // Show copy button
+                const copyBtn = document.getElementById('copyBtn');
+                copyBtn.classList.add('show');
+            }
         };
 
         function checkCooldown() {
@@ -791,6 +761,9 @@
         function generateKey() {
             const randomPart = generateRandomString(15);
             currentKey = `KEY-ASURA-${randomPart}`;
+            
+            // Save to localStorage
+            localStorage.setItem('currentKey', currentKey);
             
             const keyDisplay = document.getElementById('keyDisplay');
             keyDisplay.textContent = currentKey;
@@ -882,17 +855,36 @@
         }
 
         function createParticles() {
-            const container = document.querySelector('.container');
-            for (let i = 0; i < 20; i++) {
+            // Clear existing particles
+            const existingParticles = document.querySelectorAll('.particle');
+            existingParticles.forEach(p => p.remove());
+            
+            // Create new particles
+            for (let i = 0; i < 15; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 2 + 's';
-                container.appendChild(particle);
                 
-                setTimeout(() => {
-                    particle.remove();
-                }, 6000);
+                // Random size between 3px and 8px
+                const size = Math.random() * 5 + 3;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                
+                // Random animation properties
+                const tx = (Math.random() - 0.5) * 200;
+                const ty = (Math.random() - 0.5) * 200;
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                
+                // Random animation duration
+                const duration = Math.random() * 10 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                
+                document.body.appendChild(particle);
             }
         }
     </script>
