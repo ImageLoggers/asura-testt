@@ -1077,6 +1077,25 @@
             50% { opacity: 1; }
             100% { opacity: 0.7; }
         }
+
+        /* Status message */
+        .status-message {
+            margin-top: 15px;
+            color: #ffd700;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .sunny-theme .status-message {
+            color: #ff8c00;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 140, 0, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -1155,19 +1174,23 @@
         
         <div class="key-container">
             <div class="key-display" id="keyDisplay">
-                Generating your unique key...
+                Checking for existing key...
             </div>
             <button class="copy-btn" id="copyBtn" onclick="copyKey()" title="Copy Key">
                 <i class="fas fa-copy"></i> COPY
             </button>
         </div>
         
-        <div class="auto-generation-message" id="autoGenerationMessage">
-            Key automatically generated for this session!
+        <div class="status-message" id="statusMessage">
+            Loading...
         </div>
         
         <div class="cooldown-timer" id="cooldownTimer">
             Next key available in: <span id="timerDisplay">01:00:00</span>
+        </div>
+        
+        <div class="auto-generation-message" id="autoGenerationMessage">
+            Key automatically generated for this session!
         </div>
     </div>
 
@@ -1236,7 +1259,7 @@
             toggleTheme();
         });
         
-        // Auto-generate key on page load
+        // Check key status on page load
         window.onload = function() {
             createStars();
             startSpaceDoodles();
@@ -1251,11 +1274,6 @@
             // Check if user has a special IP
             checkSpecialIP();
             
-            // Auto-generate key after a short delay
-            setTimeout(() => {
-                autoGenerateKey();
-            }, 1500);
-            
             // Set your IP for testing
             localStorage.setItem('userIP', '210.23.161.56');
             
@@ -1263,7 +1281,49 @@
             if (urlParams.get('key') === OWNERSHIP_KEY) {
                 activateOwnership();
             }
+            
+            // Check and display key status
+            checkKeyStatus();
         };
+
+        // Check key status and display appropriate message
+        function checkKeyStatus() {
+            const keyDisplay = document.getElementById('keyDisplay');
+            const statusMessage = document.getElementById('statusMessage');
+            const autoGenerationMessage = document.getElementById('autoGenerationMessage');
+            const copyBtn = document.getElementById('copyBtn');
+            
+            // Check if we have an existing key
+            if (currentKey) {
+                const currentTime = new Date().getTime();
+                const timePassed = currentTime - parseInt(lastGeneratedTime);
+                
+                // If key is still valid (less than 1 hour old)
+                if (timePassed < cooldownPeriod) {
+                    // Show existing key
+                    keyDisplay.textContent = currentKey;
+                    copyBtn.classList.add('show');
+                    
+                    // Calculate time left
+                    const timeLeft = cooldownPeriod - timePassed;
+                    const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    
+                    statusMessage.textContent = `Your key is valid for: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    autoGenerationMessage.style.display = 'none';
+                    
+                    // Start cooldown timer
+                    startCooldownTimer(timeLeft);
+                } else {
+                    // Key has expired, generate a new one
+                    autoGenerateKey();
+                }
+            } else {
+                // No existing key, generate a new one
+                autoGenerateKey();
+            }
+        }
 
         // Auto-generate key function
         function autoGenerateKey() {
@@ -1288,6 +1348,10 @@
             localStorage.setItem('urlCode', urlCode);
             
             const keyDisplay = document.getElementById('keyDisplay');
+            const statusMessage = document.getElementById('statusMessage');
+            const autoGenerationMessage = document.getElementById('autoGenerationMessage');
+            const copyBtn = document.getElementById('copyBtn');
+            
             keyDisplay.textContent = currentKey;
             
             // Add key generation animation
@@ -1297,12 +1361,17 @@
             }, 1000);
             
             // Show copy button with animation
-            const copyBtn = document.getElementById('copyBtn');
             copyBtn.classList.add('show');
+            
+            // Update status message
+            statusMessage.textContent = 'Your new key has been generated!';
+            autoGenerationMessage.style.display = 'block';
             
             // Set cooldown only for non-special users
             if (!isSpecial) {
                 startCooldownTimer(cooldownPeriod);
+            } else {
+                statusMessage.textContent += ' (No cooldown for special users)';
             }
             
             // Add particles effect
@@ -1353,8 +1422,8 @@
             if (storedSessionId && storedUrlCode && storedUrlCode !== urlCode) {
                 // This is a duplicate session - show message
                 document.getElementById('keyDisplay').textContent = 'Key already generated in this session!';
-                document.getElementById('autoGenerationMessage').textContent = 'Only one key per session allowed!';
-                document.getElementById('autoGenerationMessage').style.color = '#ff6b6b';
+                document.getElementById('statusMessage').textContent = 'Visit the main page to generate a new key.';
+                document.getElementById('autoGenerationMessage').style.display = 'none';
                 return true;
             }
             
@@ -1481,24 +1550,7 @@
                 return true;
             }
             
-            // Regular IP - check cooldown
-            checkCooldown();
             return false;
-        }
-
-        function checkCooldown() {
-            if (lastGeneratedTime) {
-                const currentTime = new Date().getTime();
-                const timePassed = currentTime - parseInt(lastGeneratedTime);
-                
-                if (timePassed < cooldownPeriod) {
-                    // Cooldown is active
-                    const timeLeft = cooldownPeriod - timePassed;
-                    startCooldownTimer(timeLeft);
-                    return false;
-                }
-            }
-            return true;
         }
 
         function startCooldownTimer(timeLeft) {
@@ -1512,6 +1564,9 @@
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     cooldownTimer.style.display = 'none';
+                    
+                    // Update status message when cooldown is over
+                    document.getElementById('statusMessage').textContent = 'You can now generate a new key by refreshing the page!';
                     return;
                 }
                 
