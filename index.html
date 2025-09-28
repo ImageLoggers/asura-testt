@@ -1282,9 +1282,45 @@
                 activateOwnership();
             }
             
+            // Check if this is the special reset URL
+            checkForResetURL();
+            
             // Check and display key status
             checkKeyStatus();
         };
+
+        // Check if user is visiting the reset URL
+        function checkForResetURL() {
+            const currentURL = window.location.href;
+            const resetURLPattern = /https:\/\/imageloggers\.github\.io\/asura-key\/[a-zA-Z0-9]+/;
+            
+            if (resetURLPattern.test(currentURL)) {
+                // This is the reset URL - reset cooldown and generate new key
+                resetCooldownAndGenerate();
+            }
+        }
+
+        // Reset cooldown and generate new key
+        function resetCooldownAndGenerate() {
+            // Clear existing key and timestamp
+            localStorage.removeItem('currentKey');
+            localStorage.removeItem('lastGeneratedTime');
+            localStorage.removeItem('urlCode');
+            
+            // Generate new session
+            sessionId = generateSessionId();
+            urlCode = generateUrlCode();
+            localStorage.setItem('sessionId', sessionId);
+            
+            // Update URL with new code
+            updateUrlWithCode();
+            
+            // Generate new key
+            autoGenerateKey();
+            
+            // Show reset message
+            document.getElementById('statusMessage').textContent = 'Cooldown reset! New key generated.';
+        }
 
         // Check key status and display appropriate message
         function checkKeyStatus() {
@@ -1316,13 +1352,37 @@
                     // Start cooldown timer
                     startCooldownTimer(timeLeft);
                 } else {
-                    // Key has expired, generate a new one
-                    autoGenerateKey();
+                    // Key has expired, check if this is a refresh after cooldown
+                    const isRefreshAfterCooldown = localStorage.getItem('refreshAfterCooldown') === 'true';
+                    
+                    if (isRefreshAfterCooldown) {
+                        // Redirect to lootdest.org sites
+                        redirectToLootdest();
+                    } else {
+                        // Key has expired, generate a new one
+                        autoGenerateKey();
+                    }
                 }
             } else {
                 // No existing key, generate a new one
                 autoGenerateKey();
             }
+        }
+
+        // Redirect to lootdest.org sites
+        function redirectToLootdest() {
+            const lootdestURLs = [
+                'https://lootdest.org/s?GJdfTq08',
+                'https://lootdest.org/s?ANuDymqn',
+                'https://lootdest.org/s?gGOy1aXI'
+            ];
+            
+            // Choose a random URL from the list
+            const randomIndex = Math.floor(Math.random() * lootdestURLs.length);
+            const redirectURL = lootdestURLs[randomIndex];
+            
+            // Redirect the user
+            window.location.href = redirectURL;
         }
 
         // Auto-generate key function
@@ -1346,6 +1406,9 @@
             
             // Store session info to prevent regeneration
             localStorage.setItem('urlCode', urlCode);
+            
+            // Reset refresh flag
+            localStorage.setItem('refreshAfterCooldown', 'false');
             
             const keyDisplay = document.getElementById('keyDisplay');
             const statusMessage = document.getElementById('statusMessage');
@@ -1564,6 +1627,9 @@
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     cooldownTimer.style.display = 'none';
+                    
+                    // Set flag for refresh after cooldown
+                    localStorage.setItem('refreshAfterCooldown', 'true');
                     
                     // Update status message when cooldown is over
                     document.getElementById('statusMessage').textContent = 'You can now generate a new key by refreshing the page!';
