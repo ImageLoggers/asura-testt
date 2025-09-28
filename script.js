@@ -16,6 +16,7 @@ let urlCode = urlParams.get('code') || generateUrlCode();
 
 // Track if we've already redirected to prevent loops
 let hasRedirected = false;
+let isFirstLoad = true;
 
 // Set initial theme
 if (isSunnyTheme) {
@@ -61,8 +62,8 @@ function checkKeyStatus() {
     const autoGenerationMessage = document.getElementById('autoGenerationMessage');
     const copyBtn = document.getElementById('copyBtn');
     
-    // Check if this is a return from lootdest (has query parameters)
-    const hasReturnedFromRedirect = urlParams.toString().length > 0;
+    // Check if this is a return from lootdest (has specific return parameter)
+    const hasReturnedFromRedirect = urlParams.has('returned');
     
     if (currentKey && !hasReturnedFromRedirect) {
         const currentTime = new Date().getTime();
@@ -90,18 +91,18 @@ function checkKeyStatus() {
                 // First time redirect after cooldown
                 redirectToLootdest();
             } else {
-                // Generate new key (either expired or returned from lootdest)
-                autoGenerateKey();
+                // Generate new key (either expired or normal refresh)
+                autoGenerateKey(false);
             }
         }
     } else {
         // No key exists OR user returned from lootdest - generate new key
-        autoGenerateKey();
+        autoGenerateKey(hasReturnedFromRedirect);
     }
 }
 
 // Auto-generate key function
-function autoGenerateKey() {
+function autoGenerateKey(isReturnFromRedirect = false) {
     const isSpecial = checkSpecialIP();
     const randomPart = generateRandomString(12);
     const specialNumbers = generateSpecialNumbers(3);
@@ -129,17 +130,21 @@ function autoGenerateKey() {
     
     copyBtn.classList.add('show');
     
-    // Check if user returned from lootdest
-    const hasReturnedFromRedirect = urlParams.toString().length > 0;
-    if (hasReturnedFromRedirect) {
-        // Generate new random URL code for the welcome back
+    if (isReturnFromRedirect) {
+        // User returned from lootdest - generate new URL and show welcome message
         const newUrlCode = generateUrlCode();
         updateUrlWithCode(newUrlCode);
         statusMessage.textContent = `Welcome back! New key generated. Your URL: ${window.location.href}`;
-        // Clear URL parameters to prevent loop
+        // Clear the return parameter to prevent showing welcome message again on refresh
         clearUrlParameters();
     } else {
+        // Normal key generation (first visit or refresh)
         statusMessage.textContent = 'Your new key has been generated!';
+        
+        // Only update URL code if it's first load or no code exists
+        if (!urlParams.get('code')) {
+            updateUrlWithCode();
+        }
     }
     
     autoGenerationMessage.style.display = 'block';
@@ -151,12 +156,24 @@ function autoGenerateKey() {
     }
     
     createParticles();
+    
+    // Mark first load as complete
+    isFirstLoad = false;
 }
 
 // Clear URL parameters to prevent redirect loops
 function clearUrlParameters() {
-    const cleanUrl = window.location.origin + window.location.pathname;
-    window.history.replaceState({}, '', cleanUrl);
+    // Only clear the 'returned' parameter, keep other parameters
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.delete('returned');
+    
+    if (currentParams.toString().length > 0) {
+        const cleanUrl = window.location.origin + window.location.pathname + '?' + currentParams.toString();
+        window.history.replaceState({}, '', cleanUrl);
+    } else {
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, '', cleanUrl);
+    }
 }
 
 // Helper functions
@@ -173,8 +190,8 @@ function initializeUrlState() {
         localStorage.setItem('sessionId', sessionId);
     }
     
-    // Only add URL code if we don't have any parameters (meaning we're not returning from redirect)
-    if (!urlParams.get('code') && urlParams.toString().length === 0) {
+    // Only add URL code if we don't have any code parameter
+    if (!urlParams.get('code')) {
         updateUrlWithCode();
     }
 }
@@ -234,8 +251,8 @@ function redirectToLootdest() {
     const redirectURL = lootdestURLs[randomIndex];
     
     // Add a return parameter so we know when user comes back
-    const returnURL = encodeURIComponent(window.location.href + '?returned=true');
-    const finalRedirectURL = `${redirectURL}&return=${returnURL}`;
+    const returnURL = encodeURIComponent(window.location.href);
+    const finalRedirectURL = `${redirectURL}?return=${returnURL}`;
     
     window.location.href = finalRedirectURL;
 }
