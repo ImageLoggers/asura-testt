@@ -220,9 +220,7 @@ function redirectToLootdest() {
     hasRedirected = true;
     
     const lootdestURLs = [
-        'https://lootdest.org/s?GJdfTq08',
-        'https://lootdest.org/s?ANuDymqn',
-        'https://lootdest.org/s?gGOy1aXI'
+        'https://loot-link.com/s?M0hGE55R',
     ];
     
     const randomIndex = Math.floor(Math.random() * lootdestURLs.length);
