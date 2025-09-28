@@ -25,6 +25,9 @@ function initializeKeySystem() {
     createStars();
     startSpaceDoodles();
     createParticles();
+    
+    // Add random URL parameters if none exist
+    addRandomUrlParameters();
     checkKeyStatus();
 }
 
@@ -42,6 +45,31 @@ function setupEventListeners() {
     document.body.addEventListener('click', function(e) {
         createRipple(e);
     });
+}
+
+// Add random URL parameters function
+function addRandomUrlParameters() {
+    const currentUrl = new URL(window.location.href);
+    
+    // Only add parameters if the URL is clean (no existing parameters)
+    if (currentUrl.search === '') {
+        const randomParams = new URLSearchParams();
+        
+        // Add random parameters
+        randomParams.set('user', generateRandomString(10));
+        randomParams.set('session', generateRandomString(8));
+        randomParams.set('ref', 'asura_key_system');
+        randomParams.set('t', Date.now().toString());
+        randomParams.set('v', '1.0');
+        
+        // Create new URL with random parameters
+        const newUrl = currentUrl.origin + currentUrl.pathname + '?' + randomParams.toString();
+        
+        // Update the URL without reloading the page
+        window.history.replaceState({}, '', newUrl);
+        
+        console.log('Added random URL parameters:', newUrl);
+    }
 }
 
 // Check key status and display appropriate message
@@ -102,7 +130,9 @@ function autoGenerateKey() {
     }, 1000);
     
     copyBtn.classList.add('show');
-    statusMessage.textContent = 'Your new key has been generated!';
+    
+    // Show current URL in status message
+    statusMessage.textContent = `Your new key has been generated! URL: ${window.location.href}`;
     autoGenerationMessage.style.display = 'block';
     
     if (!isSpecial) {
@@ -152,7 +182,7 @@ function redirectToLootLink() {
 }
 
 function generateRandomString(length) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%!&*';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
     let result = '';
     for (let i = 0; i < length; i++) {
         result += chars.charAt(Math.floor(Math.random() * chars.length));
