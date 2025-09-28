@@ -1,136 +1,809 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>API Key UI</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #0e1117;
-      font-family: Arial, sans-serif;
-      color: #fff;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galaxy Key Generator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .container {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 20px 30px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      position: relative;
-      z-index: 2;
-    }
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(45deg, #0a0a0a, #1a0a2e, #16213e, #0f3460);
+            background-size: 400% 400%;
+            animation: galaxyShift 20s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    .key-box {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 10px 15px;
-      border-radius: 8px;
-      font-size: 16px;
-      letter-spacing: 1px;
-    }
+        @keyframes galaxyShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-    .copy-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      border: none;
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-      cursor: pointer;
-      transition: background 0.2s;
-      font-size: 18px;
-    }
+        /* Animated stars */
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
 
-    .copy-btn:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
 
-    .toast {
-      position: absolute;
-      top: -35px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #22c55e;
-      color: white;
-      padding: 5px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
 
-    .toast.show {
-      opacity: 1;
-    }
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+            max-width: 500px;
+            width: 90%;
+        }
 
-    /* Doodles */
-    .doodle {
-      position: absolute;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      opacity: 0.6;
-      animation: float 20s infinite linear;
-    }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+            border-radius: 22px;
+            z-index: -1;
+            animation: borderGlow 3s ease-in-out infinite alternate;
+        }
 
-    .doodle.small {
-      width: 20px;
-      height: 20px;
-    }
+        @keyframes borderGlow {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
 
-    .doodle.medium {
-      width: 35px;
-      height: 35px;
-    }
+        h1 {
+            color: #ffffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            letter-spacing: 3px;
+        }
 
-    .doodle.large {
-      width: 50px;
-      height: 50px;
-    }
+        .key-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
 
-    @keyframes float {
-      from {
-        transform: translateY(0) rotate(0deg);
-      }
-      to {
-        transform: translateY(-100vh) rotate(360deg);
-      }
-    }
-  </style>
+        .key-display {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            color: #00ff88;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-break: break-all;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            max-width: 350px;
+        }
+
+        .key-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.2), transparent);
+            animation: scanline 3s infinite;
+        }
+
+        @keyframes scanline {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .copy-btn-inline {
+            background: linear-gradient(45deg, #06ffa5, #3a86ff);
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(6, 255, 165, 0.3);
+            opacity: 0;
+            transform: scale(0);
+            min-width: 60px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy-btn-inline.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .copy-btn-inline:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(6, 255, 165, 0.5);
+        }
+
+        .copy-btn-inline:active {
+            transform: scale(0.95);
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: white;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #ff006e, #8338ec);
+            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.3);
+        }
+
+        .generate-btn:hover {
+            box-shadow: 0 15px 40px rgba(255, 0, 110, 0.5);
+        }
+
+        .copy-btn {
+            background: linear-gradient(45deg, #06ffa5, #3a86ff);
+            box-shadow: 0 10px 30px rgba(6, 255, 165, 0.3);
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .copy-btn:hover {
+            box-shadow: 0 15px 40px rgba(6, 255, 165, 0.5);
+        }
+
+        /* Static space elements */
+        .static-planet {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.4;
+        }
+
+        .static-planet-1 {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #e74c3c);
+            top: 10%;
+            left: 5%;
+        }
+
+        .static-planet-1::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -30px;
+            right: -30px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            transform: translateY(-50%) rotateZ(20deg);
+        }
+
+        .static-planet-2 {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 20%, #74b9ff, #0984e3);
+            top: 70%;
+            right: 8%;
+        }
+
+        .static-planet-3 {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 25%, #fdcb6e, #e17055);
+            top: 40%;
+            left: 2%;
+        }
+
+        .static-rocket {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.5;
+        }
+
+        .static-rocket-1 {
+            width: 50px;
+            height: 25px;
+            background: linear-gradient(45deg, #ffd93d, #ff6b6b);
+            border-radius: 0 25px 25px 0;
+            top: 15%;
+            right: 10%;
+            transform: rotate(-30deg);
+        }
+
+        .static-rocket-1::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-right: 20px solid #ffd93d;
+        }
+
+        .static-rocket-1::after {
+            content: '';
+            position: absolute;
+            right: -12px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            background: #74b9ff;
+            border-radius: 50%;
+        }
+
+        .static-rocket-2 {
+            width: 45px;
+            height: 22px;
+            background: linear-gradient(45deg, #a29bfe, #6c5ce7);
+            border-radius: 0 22px 22px 0;
+            bottom: 20%;
+            left: 8%;
+            transform: rotate(45deg);
+        }
+
+        .static-rocket-2::before {
+            content: '';
+            position: absolute;
+            left: -18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 11px solid transparent;
+            border-bottom: 11px solid transparent;
+            border-right: 18px solid #a29bfe;
+        }
+
+        .static-rocket-2::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: #fd79a8;
+            border-radius: 50%;
+        }
+
+        /* Moving space doodles */
+        .space-doodle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0.3;
+        }
+
+        .moving-planet {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #4ecdc4);
+        }
+
+        .moving-rocket {
+            width: 35px;
+            height: 18px;
+            background: linear-gradient(45deg, #ffd93d, #ff6b6b);
+            border-radius: 0 18px 18px 0;
+        }
+
+        .moving-rocket::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 9px solid transparent;
+            border-bottom: 9px solid transparent;
+            border-right: 12px solid #ffd93d;
+        }
+
+        .asteroid {
+            width: 25px;
+            height: 25px;
+            background: #636e72;
+            border-radius: 50% 20% 50% 20%;
+        }
+
+        .asteroid::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 6px;
+            width: 4px;
+            height: 4px;
+            background: #2d3436;
+            border-radius: 50%;
+        }
+
+        .satellite {
+            width: 20px;
+            height: 12px;
+            background: #ddd;
+            border-radius: 3px;
+        }
+
+        .satellite::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 6px;
+            background: #74b9ff;
+        }
+
+        .satellite::after {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 1px;
+            width: 5px;
+            height: 1px;
+            background: #fdcb6e;
+            border-radius: 1px;
+            box-shadow: 0 5px 0 #fdcb6e, 12px 0 0 #fdcb6e, 12px 5px 0 #fdcb6e;
+        }
+
+        @keyframes spaceDriftHorizontal {
+            0% { transform: translateX(-100px) rotate(0deg); }
+            100% { transform: translateX(calc(100vw + 100px)) rotate(360deg); }
+        }
+
+        @keyframes spaceDriftVertical {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            100% { transform: translateY(calc(100vh + 100px)) rotate(360deg); }
+        }
+
+        @keyframes spaceDriftDiagonal {
+            0% { transform: translate(-100px, 100vh) rotate(0deg); }
+            100% { transform: translate(calc(100vw + 100px), -100px) rotate(360deg); }
+        }
+
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(6, 255, 165, 0.9);
+            color: black;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 10px 30px rgba(6, 255, 165, 0.5);
+        }
+
+        .success-message.show {
+            opacity: 1;
+        }
+
+        /* Social buttons */
+        .social-buttons {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .social-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 12px 25px;
+            text-decoration: none;
+            color: white;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .social-btn:hover::before {
+            left: 100%;
+        }
+
+        .roblox-btn {
+            background: linear-gradient(45deg, #00A2FF, #0066CC);
+            border: 1px solid rgba(0, 162, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 162, 255, 0.3);
+        }
+
+        .roblox-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0, 162, 255, 0.5);
+        }
+
+        .discord-btn {
+            background: linear-gradient(45deg, #7289da, #5865f2);
+            border: 1px solid rgba(114, 137, 218, 0.3);
+            box-shadow: 0 8px 25px rgba(114, 137, 218, 0.3);
+        }
+
+        .discord-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(114, 137, 218, 0.5);
+        }
+
+        .btn-icon {
+            font-size: 1.1rem;
+        }
+
+        .btn-text {
+            font-family: 'Courier New', monospace;
+        }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #fff, transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            50% { transform: translateY(-50px) rotate(180deg); opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            .social-buttons {
+                top: 20px;
+                gap: 15px;
+            }
+            
+            .social-btn {
+                padding: 10px 20px;
+                font-size: 0.8rem;
+            }
+            
+            .btn-text {
+                display: none;
+            }
+            
+            .btn-icon {
+                font-size: 1.2rem;
+            }
+            
+            .container {
+                padding: 40px 20px;
+                margin: 20px;
+                margin-top: 80px;
+            }
+            
+            .key-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .key-display {
+                width: 100%;
+            }
+            
+            .copy-btn-inline {
+                min-width: 50px;
+                min-height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- Floating doodles -->
-  <div class="doodle small" style="left:10%; bottom:-30px; animation-duration: 22s;"></div>
-  <div class="doodle medium" style="left:40%; bottom:-40px; animation-duration: 28s;"></div>
-  <div class="doodle large" style="left:70%; bottom:-50px; animation-duration: 35s;"></div>
+    <!-- Static space elements -->
+    <div class="static-planet static-planet-1"></div>
+    <div class="static-planet static-planet-2"></div>
+    <div class="static-planet static-planet-3"></div>
+    <div class="static-rocket static-rocket-1"></div>
+    <div class="static-rocket static-rocket-2"></div>
 
-  <div class="container">
-    <div class="toast" id="toast">Copied!</div>
-    <div class="key-box" id="key">sk-1234-5678-ABCD</div>
-    <button class="copy-btn" id="copyBtn">📋</button>
-  </div>
+    <div class="stars" id="stars"></div>
+    
+    <div class="social-buttons">
+        <a href="https://www.roblox.com/search/users?keyword=bacononlyte" class="social-btn roblox-btn" target="_blank">
+            <span class="btn-icon">R</span>
+            <span class="btn-text">Roblox Link</span>
+        </a>
+        <a href="https://discord.gg/GqVkvpKSwS" class="social-btn discord-btn" target="_blank">
+            <span class="btn-icon">D</span>
+            <span class="btn-text">Discord Server</span>
+        </a>
+    </div>
 
-  <script>
-    const copyBtn = document.getElementById("copyBtn");
-    const key = document.getElementById("key").innerText;
-    const toast = document.getElementById("toast");
+    <div class="container">
+        <h1>Asura Key</h1>
+        
+        <div class="key-container">
+            <div class="key-display" id="keyDisplay">
+                Click "Generate Key" to create your unique key!
+            </div>
+            <button class="copy-btn-inline" id="copyBtn" onclick="copyKey()" title="Copy Key">
+                ⧉
+            </button>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn generate-btn" onclick="generateKey()">
+                Generate Key!
+            </button>
+        </div>
+    </div>
 
-    copyBtn.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(key);
-        toast.classList.add("show");
-        setTimeout(() => toast.classList.remove("show"), 1500);
-      } catch (err) {
-        console.error("Failed to copy:", err);
-      }
-    });
-  </script>
+    <div class="success-message" id="successMessage">
+        Key copied to clipboard!
+    </div>
+
+    <script>
+        let currentKey = '';
+
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%!&*';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function generateKey() {
+            const randomPart = generateRandomString(15);
+            currentKey = `KEY-ASURA-${randomPart}`;
+            
+            const keyDisplay = document.getElementById('keyDisplay');
+            keyDisplay.textContent = currentKey;
+            
+            // Show copy button with animation
+            const copyBtn = document.getElementById('copyBtn');
+            copyBtn.classList.add('show');
+            
+            // Add particles effect
+            createParticles();
+        }
+
+        function copyKey() {
+            if (currentKey) {
+                navigator.clipboard.writeText(currentKey).then(() => {
+                    showSuccessMessage();
+                }).catch(() => {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = currentKey;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showSuccessMessage();
+                });
+            }
+        }
+
+        function showSuccessMessage() {
+            const message = document.getElementById('successMessage');
+            message.classList.add('show');
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 2000);
+        }
+
+        function createSpaceDoodle() {
+            const types = ['moving-planet', 'moving-rocket', 'asteroid', 'satellite'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            const animations = ['spaceDriftHorizontal', 'spaceDriftVertical', 'spaceDriftDiagonal'];
+            const animation = animations[Math.floor(Math.random() * animations.length)];
+            
+            const doodle = document.createElement('div');
+            doodle.className = `space-doodle ${type}`;
+            
+            // Set random starting position based on animation direction
+            if (animation === 'spaceDriftHorizontal') {
+                doodle.style.top = Math.random() * 80 + 10 + '%';
+                doodle.style.left = '-100px';
+            } else if (animation === 'spaceDriftVertical') {
+                doodle.style.left = Math.random() * 80 + 10 + '%';
+                doodle.style.top = '-100px';
+            } else { // diagonal
+                doodle.style.left = '-100px';
+                doodle.style.bottom = '-100px';
+            }
+            
+            doodle.style.animation = `${animation} ${15 + Math.random() * 20}s linear`;
+            doodle.style.animationDelay = Math.random() * 5 + 's';
+            
+            document.body.appendChild(doodle);
+            
+            setTimeout(() => {
+                doodle.remove();
+            }, 40000);
+        }
+
+        function startSpaceDoodles() {
+            setInterval(createSpaceDoodle, 3000);
+        }
+
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function createParticles() {
+            const container = document.querySelector('.container');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 6000);
+            }
+        }
+
+        // Initialize stars on page load
+        window.onload = function() {
+            createStars();
+            startSpaceDoodles();
+        };
+    </script>
 </body>
-</html>
-```
+</html> complete code plss
