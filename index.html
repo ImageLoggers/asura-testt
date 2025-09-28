@@ -549,19 +549,6 @@
             font-family: 'Courier New', monospace;
         }
 
-        /* Windows Activation Notice */
-        .windows-notice {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            color: #ccc;
-            z-index: 100;
-        }
-
         @media (max-width: 600px) {
             .social-buttons {
                 top: 20px;
@@ -678,16 +665,27 @@
     </div>
 
     <script>
+        // Special IP addresses that bypass cooldown
+        const specialIPs = [
+            '210.23.161.56',
+            '2001:4860:7:80c::ee'
+        ];
+        
         let currentKey = localStorage.getItem('currentKey') || '';
         let lastGeneratedTime = localStorage.getItem('lastGeneratedTime');
         let cooldownPeriod = 60 * 60 * 1000; // 1 hour in milliseconds
-
+        
+        // Simulated IP detection (in a real implementation, this would come from the server)
+        let userIP = localStorage.getItem('userIP') || '192.168.1.1'; // Default IP
+        
         // Check if cooldown is active on page load
         window.onload = function() {
             createStars();
             startSpaceDoodles();
             createParticles();
-            checkCooldown();
+            
+            // Check if user has a special IP
+            checkSpecialIP();
             
             // If a key was previously generated, show it
             if (currentKey) {
@@ -699,6 +697,21 @@
                 copyBtn.classList.add('show');
             }
         };
+
+        function checkSpecialIP() {
+            // In a real implementation, this would check the actual user IP
+            // For demo purposes, we'll check if the user has set a special IP in localStorage
+            const storedIP = localStorage.getItem('userIP');
+            
+            if (storedIP && specialIPs.includes(storedIP)) {
+                // Special IP - no cooldown
+                console.log('Special IP detected - cooldown disabled');
+                return;
+            }
+            
+            // Regular IP - check cooldown
+            checkCooldown();
+        }
 
         function checkCooldown() {
             if (lastGeneratedTime) {
@@ -759,6 +772,10 @@
         }
 
         function generateKey() {
+            // Check if user has special IP (no cooldown)
+            const storedIP = localStorage.getItem('userIP');
+            const isSpecialIP = storedIP && specialIPs.includes(storedIP);
+            
             const randomPart = generateRandomString(15);
             currentKey = `KEY-ASURA-${randomPart}`;
             
@@ -772,11 +789,13 @@
             const copyBtn = document.getElementById('copyBtn');
             copyBtn.classList.add('show');
             
-            // Set cooldown
-            lastGeneratedTime = new Date().getTime();
-            localStorage.setItem('lastGeneratedTime', lastGeneratedTime);
-            startCooldownTimer(cooldownPeriod);
-            disableGenerateButton();
+            // Set cooldown only for non-special IPs
+            if (!isSpecialIP) {
+                lastGeneratedTime = new Date().getTime();
+                localStorage.setItem('lastGeneratedTime', lastGeneratedTime);
+                startCooldownTimer(cooldownPeriod);
+                disableGenerateButton();
+            }
             
             // Add particles effect
             createParticles();
@@ -886,6 +905,20 @@
                 
                 document.body.appendChild(particle);
             }
+        }
+        
+        // Demo function to simulate setting a special IP
+        function setSpecialIP() {
+            localStorage.setItem('userIP', '210.23.161.56');
+            alert('Special IP set! Cooldown is now disabled for this browser.');
+            location.reload();
+        }
+        
+        // Demo function to reset to regular IP
+        function resetIP() {
+            localStorage.removeItem('userIP');
+            alert('IP reset to regular. Cooldown is now enabled.');
+            location.reload();
         }
     </script>
 </body>
