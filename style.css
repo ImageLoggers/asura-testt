@@ -252,6 +252,7 @@ body.sunny-theme {
     50% { opacity: 1; transform: scale(1.2); }
 }
 
+        /* Content Area - Clean UI */
 /* Content Area - Clean UI */
 .content-area {
     display: flex;
@@ -266,12 +267,57 @@ body.sunny-theme {
     margin-top: 40px;
 }
 
+/* Title with Icon Container - ADD THIS NEW SECTION */
+.title-with-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.title-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+    transition: all 0.3s ease;
+    object-fit: cover;
+}
+
+.title-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+.sunny-theme .title-icon {
+    box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
+}
+
+.sunny-theme .title-icon:hover {
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
+}
+
+/* Mobile responsive for title with icon */
+@media (max-width: 600px) {
+    .title-with-icon {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .title-icon {
+        width: 80px;
+        height: 70px;
+    }
+}
+
 h1 {
     color: #ffffff;
     font-family: 'Orbitron', monospace;
     font-size: 3.5rem;
     font-weight: 900;
-    margin-bottom: 30px;
+    margin: 0; /* MODIFIED: removed margin-bottom */
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
     background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
     background-clip: text;
