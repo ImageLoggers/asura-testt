@@ -18,365 +18,155 @@ document.addEventListener('DOMContentLoaded', function() {
     setupAdminCommands();
 });
 
-// Logo popup functionality
+// Logo click functionality
 function setupLogoPopup() {
     const logoBtn = document.getElementById('logoBtn');
-    const logoPopup = document.getElementById('logoPopup');
-    const closePopup = document.getElementById('closePopup');
-    const galaxyHubBtn = document.getElementById('galaxyHubBtn');
-    const adminPanelBtn = document.getElementById('adminPanelBtn');
-    const settingsBtn = document.getElementById('settingsBtn');
 
-    // Logo click - open popup
+    // Logo click - generate new galaxy background and redirect to home
     logoBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        logoPopup.classList.add('active');
+        generateNewGalaxyBackground();
+        redirectToHome();
     });
+}
 
-    // Close popup
-    closePopup.addEventListener('click', function() {
-        logoPopup.classList.remove('active');
-    });
-
-    // Close popup when clicking outside
-    logoPopup.addEventListener('click', function(e) {
-        if (e.target === logoPopup) {
-            logoPopup.classList.remove('active');
+// Generate new galaxy background
+function generateNewGalaxyBackground() {
+    // Clear existing stars
+    const starsContainer = document.getElementById('stars');
+    if (starsContainer) {
+        starsContainer.innerHTML = '';
+        
+        // Create new stars with different patterns
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.width = (Math.random() * 3 + 1) + 'px';
+            star.style.height = star.style.width;
+            star.style.animationDelay = Math.random() * 5 + 's';
+            star.style.animationDuration = (Math.random() * 5 + 2) + 's';
+            starsContainer.appendChild(star);
         }
-    });
-
-    // Galaxy Hub Button - Open new website
-    galaxyHubBtn.addEventListener('click', function() {
-        openGalaxyHub();
-    });
-
-    // Admin Panel Button - Show admin options
-    adminPanelBtn.addEventListener('click', function() {
-        showAdminPanel();
-    });
-
-    // Settings Button - Show settings
-    settingsBtn.addEventListener('click', function() {
-        showSettings();
-    });
-}
-
-// Open Galaxy Hub Website
-function openGalaxyHub() {
-    const galaxyWindow = window.open('', 'AsuraGalaxyHub', 'width=1200,height=800,scrollbars=yes,resizable=yes');
-    
-    // Create galaxy-themed HTML content
-    const galaxyHTML = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Asura Galaxy Hub</title>
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
-            body {
-                font-family: 'Arial', sans-serif;
-                background: linear-gradient(135deg, #0a0a2a, #1a1a4a, #2a2a6a);
-                background-size: 400% 400%;
-                animation: galaxyShift 15s ease infinite;
-                color: white;
-                min-height: 100vh;
-                overflow-x: hidden;
-                position: relative;
-            }
-
-            @keyframes galaxyShift {
-                0% { background-position: 0% 50%; }
-                50% { background-position: 100% 50%; }
-                100% { background-position: 0% 50%; }
-            }
-
-            .stars {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-                z-index: 1;
-            }
-
-            .star {
-                position: absolute;
-                background: white;
-                border-radius: 50%;
-                animation: twinkle 3s infinite;
-            }
-
-            @keyframes twinkle {
-                0%, 100% { opacity: 0.3; transform: scale(1); }
-                50% { opacity: 1; transform: scale(1.2); }
-            }
-
-            .container {
-                position: relative;
-                z-index: 2;
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 40px 20px;
-                text-align: center;
-            }
-
-            .header {
-                margin-bottom: 50px;
-            }
-
-            .logo {
-                width: 120px;
-                height: 120px;
-                margin: 0 auto 20px;
-                border-radius: 20px;
-                overflow: hidden;
-                box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
-                border: 3px solid rgba(0, 255, 255, 0.3);
-            }
-
-            .logo img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-
-            h1 {
-                font-size: 3.5rem;
-                background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
-                background-clip: text;
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                margin-bottom: 10px;
-                text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-            }
-
-            .subtitle {
-                font-size: 1.2rem;
-                color: #aaccff;
-                margin-bottom: 30px;
-            }
-
-            .hub-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                gap: 30px;
-                margin-top: 50px;
-            }
-
-            .hub-card {
-                background: rgba(255, 255, 255, 0.1);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: 15px;
-                padding: 30px;
-                transition: all 0.3s ease;
-                cursor: pointer;
-                position: relative;
-                overflow: hidden;
-            }
-
-            .hub-card::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-                transition: left 0.5s;
-            }
-
-            .hub-card:hover::before {
-                left: 100%;
-            }
-
-            .hub-card:hover {
-                transform: translateY(-10px);
-                box-shadow: 0 15px 30px rgba(0, 255, 255, 0.3);
-                border-color: rgba(0, 255, 255, 0.5);
-            }
-
-            .card-icon {
-                font-size: 3rem;
-                margin-bottom: 20px;
-                color: #00ffff;
-            }
-
-            .card-title {
-                font-size: 1.5rem;
-                margin-bottom: 15px;
-                color: #ffffff;
-            }
-
-            .card-description {
-                color: #aaccff;
-                line-height: 1.6;
-            }
-
-            .coming-soon {
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px dashed rgba(255, 255, 255, 0.3);
-            }
-
-            .coming-soon .card-title {
-                color: #888;
-            }
-
-            .coming-soon .card-description {
-                color: #666;
-            }
-
-            .floating-planet {
-                position: fixed;
-                width: 100px;
-                height: 100px;
-                border-radius: 50%;
-                background: radial-gradient(circle at 30% 30%, #ff6b6b, #4ecdc4);
-                animation: float 20s infinite linear;
-                z-index: 1;
-            }
-
-            .floating-planet:nth-child(1) {
-                top: 10%;
-                left: 5%;
-                background: radial-gradient(circle at 30% 30%, #ff6b6b, #e74c3c);
-            }
-
-            .floating-planet:nth-child(2) {
-                top: 60%;
-                right: 10%;
-                background: radial-gradient(circle at 40% 20%, #74b9ff, #0984e3);
-                animation-delay: -10s;
-            }
-
-            .floating-planet:nth-child(3) {
-                bottom: 20%;
-                left: 15%;
-                background: radial-gradient(circle at 35% 25%, #fdcb6e, #e17055);
-                animation-delay: -5s;
-            }
-
-            @keyframes float {
-                0% { transform: translate(0, 0) rotate(0deg); }
-                25% { transform: translate(50px, -30px) rotate(90deg); }
-                50% { transform: translate(100px, 0) rotate(180deg); }
-                75% { transform: translate(50px, 30px) rotate(270deg); }
-                100% { transform: translate(0, 0) rotate(360deg); }
-            }
-        </style>
-    </head>
-    <body>
-        <div class="stars" id="starsContainer"></div>
-        
-        <!-- Floating Planets -->
-        <div class="floating-planet"></div>
-        <div class="floating-planet"></div>
-        <div class="floating-planet"></div>
-        
-        <div class="container">
-            <div class="header">
-                <div class="logo">
-                    <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Asura Logo">
-                </div>
-                <h1>Asura Galaxy Hub</h1>
-                <p class="subtitle">Explore the universe of possibilities</p>
-            </div>
-            
-            <div class="hub-grid">
-                <div class="hub-card" onclick="alert('Key System Loading...')">
-                    <div class="card-icon">🔑</div>
-                    <h3 class="card-title">Key System</h3>
-                    <p class="card-description">Access the main key generation system and manage your keys</p>
-                </div>
-                
-                <div class="hub-card" onclick="alert('Dashboard Coming Soon...')">
-                    <div class="card-icon">📊</div>
-                    <h3 class="card-title">User Dashboard</h3>
-                    <p class="card-description">View your statistics, key history, and account information</p>
-                </div>
-                
-                <div class="hub-card coming-soon">
-                    <div class="card-icon">🚀</div>
-                    <h3 class="card-title">Premium Features</h3>
-                    <p class="card-description">Exclusive tools and enhanced capabilities (Coming Soon)</p>
-                </div>
-                
-                <div class="hub-card coming-soon">
-                    <div class="card-icon">👥</div>
-                    <h3 class="card-title">Community Hub</h3>
-                    <p class="card-description">Connect with other users and share experiences (Coming Soon)</p>
-                </div>
-                
-                <div class="hub-card coming-soon">
-                    <div class="card-icon">⚡</div>
-                    <h3 class="card-title">Quick Tools</h3>
-                    <p class="card-description">Instant access to frequently used utilities (Coming Soon)</p>
-                </div>
-                
-                <div class="hub-card coming-soon">
-                    <div class="card-icon">🔧</div>
-                    <h3 class="card-title">Advanced Settings</h3>
-                    <p class="card-description">Customize your experience with advanced options (Coming Soon)</p>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            // Create stars
-            function createStars() {
-                const container = document.getElementById('starsContainer');
-                for (let i = 0; i < 200; i++) {
-                    const star = document.createElement('div');
-                    star.className = 'star';
-                    star.style.left = Math.random() * 100 + '%';
-                    star.style.top = Math.random() * 100 + '%';
-                    star.style.width = Math.random() * 2 + 1 + 'px';
-                    star.style.height = star.style.width;
-                    star.style.animationDelay = Math.random() * 3 + 's';
-                    container.appendChild(star);
-                }
-            }
-            
-            createStars();
-        </script>
-    </body>
-    </html>
-    `;
-    
-    galaxyWindow.document.write(galaxyHTML);
-    galaxyWindow.document.close();
-    
-    // Close the popup
-    document.getElementById('logoPopup').classList.remove('active');
-}
-
-// Show Admin Panel
-function showAdminPanel() {
-    if (isOwner) {
-        alert('Admin Panel:\n\nAvailable Commands:\n• /RemoveAdmin\n• /Remove-All-Admin\n• /Set-Key-Valid-Cooldown-Reset\n• /SET-0-COOLDOWN\n\nType these commands anywhere on the page.');
-    } else {
-        alert('Admin access required. Type the ownership key to activate admin privileges.');
     }
-    document.getElementById('logoPopup').classList.remove('active');
+    
+    // Add shooting stars
+    createShootingStars();
+    
+    // Change galaxy gradient colors
+    changeGalaxyGradient();
+    
+    // Add floating space debris
+    createSpaceDebris();
 }
 
-// Show Settings
-function showSettings() {
-    alert('Settings Panel:\n\n• Theme: Galaxy/Sunny\n• Notifications: Enabled\n• Auto-generate: Enabled\n\nMore settings coming soon...');
-    document.getElementById('logoPopup').classList.remove('active');
+// Create shooting stars effect
+function createShootingStars() {
+    const starsContainer = document.getElementById('stars');
+    if (!starsContainer) return;
+    
+    for (let i = 0; i < 5; i++) {
+        const shootingStar = document.createElement('div');
+        shootingStar.className = 'shooting-star';
+        shootingStar.style.left = Math.random() * 100 + '%';
+        shootingStar.style.top = Math.random() * 100 + '%';
+        shootingStar.style.animationDelay = Math.random() * 10 + 's';
+        starsContainer.appendChild(shootingStar);
+        
+        // Remove shooting star after animation
+        setTimeout(() => {
+            if (shootingStar.parentNode) {
+                shootingStar.remove();
+            }
+        }, 3000);
+    }
 }
 
-// ... rest of your existing admin.js functions remain the same ...
-function openWebsite(url) {
-    window.open(url, '_blank');
+// Change galaxy gradient colors
+function changeGalaxyGradient() {
+    const body = document.body;
+    const gradients = [
+        'linear-gradient(45deg, #0a0a0a, #1a0a2e, #16213e, #0f3460)',
+        'linear-gradient(45deg, #0a0a2a, #1a1a4a, #2d2d6a, #1e3a8a)',
+        'linear-gradient(45deg, #1a0a2e, #2d1b4e, #3c2a6d, #4a3a8c)',
+        'linear-gradient(45deg, #0f172a, #1e293b, #334155, #475569)',
+        'linear-gradient(45deg, #0a0a0a, #1e1e2e, #2d2d4a, #3c3c6a)'
+    ];
+    
+    const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
+    body.style.background = randomGradient;
+    
+    // Add transition effect
+    body.style.transition = 'background 1s ease';
+    
+    // Reset transition after animation
+    setTimeout(() => {
+        body.style.transition = '';
+    }, 1000);
+}
+
+// Create floating space debris
+function createSpaceDebris() {
+    const debrisTypes = ['debris-1', 'debris-2', 'debris-3'];
+    const container = document.body;
+    
+    // Remove existing debris
+    const existingDebris = document.querySelectorAll('.space-debris');
+    existingDebris.forEach(debris => debris.remove());
+    
+    for (let i = 0; i < 8; i++) {
+        const debris = document.createElement('div');
+        debris.className = `space-debris ${debrisTypes[Math.floor(Math.random() * debrisTypes.length)]}`;
+        debris.style.left = Math.random() * 100 + '%';
+        debris.style.top = Math.random() * 100 + '%';
+        debris.style.animationDelay = Math.random() * 20 + 's';
+        container.appendChild(debris);
+    }
+}
+
+// Redirect to home
+function redirectToHome() {
+    // Show loading effect
+    const keyDisplay = document.getElementById('keyDisplay');
+    const statusMessage = document.getElementById('statusMessage');
+    
+    if (keyDisplay) {
+        keyDisplay.textContent = 'Refreshing...';
+        keyDisplay.style.color = '#00ffff';
+    }
+    
+    if (statusMessage) {
+        statusMessage.textContent = 'Generating new galaxy...';
+        statusMessage.style.color = '#00ffff';
+    }
+    
+    // Add ripple effect
+    createRippleEffect();
+    
+    // Redirect after a short delay to show the effects
+    setTimeout(() => {
+        window.location.href = window.location.origin + window.location.pathname;
+    }, 1500);
+}
+
+// Create ripple effect when clicking logo
+function createRippleEffect() {
+    const ripple = document.createElement('div');
+    ripple.className = 'logo-ripple';
+    document.body.appendChild(ripple);
+    
+    // Center the ripple on screen
+    ripple.style.left = '50%';
+    ripple.style.top = '50%';
+    ripple.style.transform = 'translate(-50%, -50%)';
+    
+    // Remove ripple after animation
+    setTimeout(() => {
+        if (ripple.parentNode) {
+            ripple.remove();
+        }
+    }, 1000);
 }
 
 // Admin command system
@@ -589,42 +379,48 @@ function generateSpecialNumbers(count) {
 
 function showAccessMessage() {
     const message = document.getElementById('accessMessage');
-    message.classList.add('show');
-    setTimeout(() => {
-        message.classList.remove('show');
-    }, 3000);
+    if (message) {
+        message.classList.add('show');
+        setTimeout(() => {
+            message.classList.remove('show');
+        }, 3000);
+    }
 }
 
 function showAdminMessage(text, backgroundColor = 'rgba(0, 255, 0, 0.9)') {
     const message = document.getElementById('accessMessage');
-    const originalText = message.textContent;
-    const originalBackground = message.style.background;
-    
-    message.style.background = backgroundColor;
-    message.textContent = text;
-    message.classList.add('show');
-    
-    setTimeout(() => {
-        message.classList.remove('show');
-        // Reset to original message
+    if (message) {
+        const originalText = message.textContent;
+        const originalBackground = message.style.background;
+        
+        message.style.background = backgroundColor;
+        message.textContent = text;
+        message.classList.add('show');
+        
         setTimeout(() => {
-            message.style.background = originalBackground;
-            message.textContent = originalText;
-        }, 500);
-    }, 3000);
+            message.classList.remove('show');
+            // Reset to original message
+            setTimeout(() => {
+                message.style.background = originalBackground;
+                message.textContent = originalText;
+            }, 500);
+        }, 3000);
+    }
 }
 
 function showRemoveAdminMessage() {
     const message = document.getElementById('accessMessage');
-    message.style.background = 'rgba(255, 0, 0, 0.9)';
-    message.textContent = 'ADMIN ACCESS REMOVED!';
-    message.classList.add('show');
-    setTimeout(() => {
-        message.classList.remove('show');
-        // Reset to original message
+    if (message) {
+        message.style.background = 'rgba(255, 0, 0, 0.9)';
+        message.textContent = 'ADMIN ACCESS REMOVED!';
+        message.classList.add('show');
         setTimeout(() => {
-            message.style.background = '';
-            message.textContent = 'ACCESS GRANTED: Owner privileges activated!';
-        }, 500);
-    }, 3000);
+            message.classList.remove('show');
+            // Reset to original message
+            setTimeout(() => {
+                message.style.background = '';
+                message.textContent = 'ACCESS GRANTED: Owner privileges activated!';
+            }, 500);
+        }, 3000);
+    }
 }
