@@ -14,6 +14,9 @@ let urlParams = new URLSearchParams(window.location.search);
 let sessionId = localStorage.getItem('sessionId') || generateSessionId();
 let urlCode = urlParams.get('code') || generateUrlCode();
 
+// Track if we've already redirected to prevent loops
+let hasRedirected = false;
+
 // Set initial theme
 if (isSunnyTheme) {
     document.body.classList.add('sunny-theme');
@@ -58,11 +61,15 @@ function checkKeyStatus() {
     const autoGenerationMessage = document.getElementById('autoGenerationMessage');
     const copyBtn = document.getElementById('copyBtn');
     
-    if (currentKey) {
+    // Check if this is a return from lootdest (has query parameters)
+    const hasReturnedFromRedirect = urlParams.toString().length > 0;
+    
+    if (currentKey && !hasReturnedFromRedirect) {
         const currentTime = new Date().getTime();
         const timePassed = currentTime - parseInt(lastGeneratedTime);
         
         if (timePassed < cooldownPeriod) {
+            // Show existing valid key
             keyDisplay.textContent = currentKey;
             copyBtn.classList.add('show');
             
@@ -76,15 +83,19 @@ function checkKeyStatus() {
             
             startCooldownTimer(timeLeft);
         } else {
+            // Key has expired
             const isRefreshAfterCooldown = localStorage.getItem('refreshAfterCooldown') === 'true';
             
-            if (isRefreshAfterCooldown) {
+            if (isRefreshAfterCooldown && !hasRedirected) {
+                // First time redirect after cooldown
                 redirectToLootdest();
             } else {
+                // Generate new key (either expired or returned from lootdest)
                 autoGenerateKey();
             }
         }
     } else {
+        // No key exists OR user returned from lootdest - generate new key
         autoGenerateKey();
     }
 }
@@ -100,7 +111,10 @@ function autoGenerateKey() {
     localStorage.setItem('lastGeneratedTime', new Date().getTime());
     localStorage.setItem('urlCode', urlCode);
     localStorage.setItem('lastURL', window.location.href);
+    
+    // Reset redirect flags when generating new key
     localStorage.setItem('refreshAfterCooldown', 'false');
+    hasRedirected = false;
     
     const keyDisplay = document.getElementById('keyDisplay');
     const statusMessage = document.getElementById('statusMessage');
@@ -114,7 +128,17 @@ function autoGenerateKey() {
     }, 1000);
     
     copyBtn.classList.add('show');
-    statusMessage.textContent = 'Your new key has been generated!';
+    
+    // Check if user returned from lootdest
+    const hasReturnedFromRedirect = urlParams.toString().length > 0;
+    if (hasReturnedFromRedirect) {
+        statusMessage.textContent = 'Welcome back! New key generated.';
+        // Clear URL parameters to prevent loop
+        clearUrlParameters();
+    } else {
+        statusMessage.textContent = 'Your new key has been generated!';
+    }
+    
     autoGenerationMessage.style.display = 'block';
     
     if (!isSpecial) {
@@ -124,6 +148,12 @@ function autoGenerateKey() {
     }
     
     createParticles();
+}
+
+// Clear URL parameters to prevent redirect loops
+function clearUrlParameters() {
+    const cleanUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, '', cleanUrl);
 }
 
 // Helper functions
@@ -140,7 +170,8 @@ function initializeUrlState() {
         localStorage.setItem('sessionId', sessionId);
     }
     
-    if (!urlParams.get('code')) {
+    // Only add URL code if we don't have any parameters (meaning we're not returning from redirect)
+    if (!urlParams.get('code') && urlParams.toString().length === 0) {
         updateUrlWithCode();
     }
 }
@@ -185,6 +216,9 @@ function startCooldownTimer(timeLeft) {
 }
 
 function redirectToLootdest() {
+    // Set flag to prevent multiple redirects
+    hasRedirected = true;
+    
     const lootdestURLs = [
         'https://lootdest.org/s?GJdfTq08',
         'https://lootdest.org/s?ANuDymqn',
@@ -193,7 +227,12 @@ function redirectToLootdest() {
     
     const randomIndex = Math.floor(Math.random() * lootdestURLs.length);
     const redirectURL = lootdestURLs[randomIndex];
-    window.location.href = redirectURL;
+    
+    // Add a return parameter so we know when user comes back
+    const returnURL = encodeURIComponent(window.location.href + '?returned=true');
+    const finalRedirectURL = `${redirectURL}&return=${returnURL}`;
+    
+    window.location.href = finalRedirectURL;
 }
 
 function generateRandomString(length) {
@@ -258,7 +297,7 @@ function toggleTheme() {
     }
 }
 
-// Visual effects functions
+// Visual effects functions (keep the same as before)
 function createSpaceDoodle() {
     if (document.body.classList.contains('sunny-theme')) return;
     
