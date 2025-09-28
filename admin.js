@@ -5,7 +5,9 @@ let typedText = '';
 
 // Admin commands
 const ADMIN_COMMANDS = {
-    '/RemoveAdmin': removeAdminAccess
+    '/RemoveAdmin': removeAdminAccess,
+    '/Remove-All-Admin': removeAllAdminAccess,
+    '/Set-Key-Valid-Cooldown-Reset': resetKeyCooldown
 };
 
 // Initialize admin system
@@ -57,7 +59,7 @@ function openWebsite(url) {
 // Admin command system
 function setupAdminCommands() {
     document.addEventListener('keydown', function(e) {
-        if (e.key.length === 1 && e.key.match(/[a-zA-Z_0-9\/]/)) {
+        if (e.key.length === 1 && e.key.match(/[a-zA-Z_0-9\/\-]/)) {
             typedText += e.key;
             
             // Check for ownership key
@@ -107,7 +109,62 @@ function removeAdminAccess() {
         localStorage.removeItem('ownershipKey');
         localStorage.removeItem('isOwner');
         isOwner = false;
-        showRemoveAdminMessage();
+        showAdminMessage('ADMIN ACCESS REMOVED!', 'rgba(255, 0, 0, 0.9)');
+    }
+}
+
+function removeAllAdminAccess() {
+    if (isOwner) {
+        // Remove all admin-related data
+        localStorage.removeItem('ownershipKey');
+        localStorage.removeItem('isOwner');
+        localStorage.removeItem('userIP');
+        
+        // Also clear any special IP settings
+        const specialIPs = ['210.23.161.56', '2001:4454:3a4:ca00:28c7:3c7a:a0a1:dccd'];
+        localStorage.removeItem('specialIPs');
+        
+        isOwner = false;
+        showAdminMessage('ALL ADMIN ACCESS COMPLETELY REMOVED!', 'rgba(255, 50, 50, 0.9)');
+    }
+}
+
+function resetKeyCooldown() {
+    if (isOwner) {
+        // Set last generated time to current time (key is fresh)
+        localStorage.setItem('lastGeneratedTime', new Date().getTime());
+        
+        // Reset cooldown flags
+        localStorage.setItem('refreshAfterCooldown', 'false');
+        
+        // Clear any existing timer
+        const cooldownTimer = document.getElementById('cooldownTimer');
+        if (cooldownTimer) {
+            cooldownTimer.style.display = 'none';
+        }
+        
+        // Update the status message
+        const statusMessage = document.getElementById('statusMessage');
+        if (statusMessage) {
+            statusMessage.textContent = 'Key cooldown reset! Your key is now valid.';
+        }
+        
+        // Update the key display to show it's fresh
+        const keyDisplay = document.getElementById('keyDisplay');
+        if (keyDisplay && localStorage.getItem('currentKey')) {
+            keyDisplay.textContent = localStorage.getItem('currentKey');
+            keyDisplay.classList.add('key-generation-effect');
+            setTimeout(() => {
+                keyDisplay.classList.remove('key-generation-effect');
+            }, 1000);
+        }
+        
+        showAdminMessage('KEY COOLDOWN RESET! Key is now valid.', 'rgba(0, 255, 0, 0.9)');
+        
+        // Refresh the cooldown timer display
+        if (window.startCooldownTimer) {
+            window.startCooldownTimer(60 * 60 * 1000); // Reset to 1 hour
+        }
     }
 }
 
@@ -116,6 +173,25 @@ function showAccessMessage() {
     message.classList.add('show');
     setTimeout(() => {
         message.classList.remove('show');
+    }, 3000);
+}
+
+function showAdminMessage(text, backgroundColor = 'rgba(0, 255, 0, 0.9)') {
+    const message = document.getElementById('accessMessage');
+    const originalText = message.textContent;
+    const originalBackground = message.style.background;
+    
+    message.style.background = backgroundColor;
+    message.textContent = text;
+    message.classList.add('show');
+    
+    setTimeout(() => {
+        message.classList.remove('show');
+        // Reset to original message
+        setTimeout(() => {
+            message.style.background = originalBackground;
+            message.textContent = originalText;
+        }, 500);
     }, 3000);
 }
 
