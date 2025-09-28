@@ -1234,6 +1234,11 @@
         let isSunnyTheme = localStorage.getItem('isSunnyTheme') === 'true';
         let typedText = '';
         
+        // URL state management
+        let urlParams = new URLSearchParams(window.location.search);
+        let sessionId = localStorage.getItem('sessionId') || generateSessionId();
+        let urlCode = urlParams.get('code') || generateUrlCode();
+        
         // Set initial theme
         if (isSunnyTheme) {
             document.body.classList.add('sunny-theme');
@@ -1279,6 +1284,9 @@
             startSpaceDoodles();
             createParticles();
             
+            // Initialize URL state
+            initializeUrlState();
+            
             // Check ownership
             verifyOwnership();
             
@@ -1299,11 +1307,63 @@
             localStorage.setItem('userIP', '210.23.161.56');
             
             // Auto-activate ownership if key is in URL
-            const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('key') === OWNERSHIP_KEY) {
                 activateOwnership();
             }
         };
+
+        // URL State Management Functions
+        function initializeUrlState() {
+            // Generate session ID if not exists
+            if (!localStorage.getItem('sessionId')) {
+                localStorage.setItem('sessionId', sessionId);
+            }
+            
+            // Generate URL code if not in URL
+            if (!urlParams.get('code')) {
+                updateUrlWithCode();
+            }
+            
+            // Check if this is a duplicate session
+            checkDuplicateSession();
+        }
+        
+        function generateSessionId() {
+            return 'session_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+        }
+        
+        function generateUrlCode() {
+            return Math.random().toString(36).substr(2, 8).toUpperCase();
+        }
+        
+        function updateUrlWithCode() {
+            // Create new URL with random parameters
+            const newParams = new URLSearchParams();
+            newParams.set('user', Math.floor(Math.random() * 10000000000).toString());
+            newParams.set('t', Math.floor(Date.now() / 1000).toString());
+            newParams.set('code', urlCode);
+            
+            // Update URL without reloading the page
+            const newUrl = window.location.origin + window.location.pathname + '?' + newParams.toString();
+            window.history.replaceState({}, '', newUrl);
+        }
+        
+        function checkDuplicateSession() {
+            const storedSessionId = localStorage.getItem('sessionId');
+            const storedUrlCode = localStorage.getItem('urlCode');
+            
+            // If session ID exists but URL code doesn't match, it's a duplicate
+            if (storedSessionId && storedUrlCode && storedUrlCode !== urlCode) {
+                // This is a duplicate session - disable generation
+                disableGenerateButton();
+                document.getElementById('keyDisplay').textContent = 'Key already generated in this session!';
+                return true;
+            }
+            
+            // Store current URL code
+            localStorage.setItem('urlCode', urlCode);
+            return false;
+        }
 
         // Ownership functions
         function verifyOwnership() {
@@ -1328,10 +1388,18 @@
         }
 
         function showAccessMessage() {
-            const message = document.getElementById('accessMessage');
+            const message = document.createElement('div');
+            message.className = 'access-message';
+            message.id = 'accessMessage';
+            message.textContent = 'ACCESS GRANTED: Owner privileges activated!';
+            document.body.appendChild(message);
+            
             message.classList.add('show');
             setTimeout(() => {
                 message.classList.remove('show');
+                setTimeout(() => {
+                    message.remove();
+                }, 500);
             }, 3000);
         }
 
@@ -1462,15 +1530,23 @@
         }
 
         function generateKey() {
+            // Check for duplicate session first
+            if (checkDuplicateSession()) {
+                return;
+            }
+            
             // Check if user has special IP or ownership (no cooldown)
             const isSpecial = checkSpecialIP();
             
             const randomPart = generateRandomString(15);
             currentKey = `KEY-ASURA-${randomPart}`;
             
-            // Save to localStorage - THIS IS THE FIX FOR KEY SAVING
+            // Save to localStorage
             localStorage.setItem('currentKey', currentKey);
             localStorage.setItem('lastGeneratedTime', new Date().getTime());
+            
+            // Store session info to prevent regeneration
+            localStorage.setItem('urlCode', urlCode);
             
             const keyDisplay = document.getElementById('keyDisplay');
             keyDisplay.textContent = currentKey;
