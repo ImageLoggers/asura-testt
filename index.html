@@ -1,1 +1,136 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>API Key UI</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #0e1117;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      overflow: hidden;
+    }
 
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px 30px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .key-box {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 16px;
+      letter-spacing: 1px;
+    }
+
+    .copy-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 18px;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .toast {
+      position: absolute;
+      top: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #22c55e;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    /* Doodles */
+    .doodle {
+      position: absolute;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: float 20s infinite linear;
+    }
+
+    .doodle.small {
+      width: 20px;
+      height: 20px;
+    }
+
+    .doodle.medium {
+      width: 35px;
+      height: 35px;
+    }
+
+    .doodle.large {
+      width: 50px;
+      height: 50px;
+    }
+
+    @keyframes float {
+      from {
+        transform: translateY(0) rotate(0deg);
+      }
+      to {
+        transform: translateY(-100vh) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Floating doodles -->
+  <div class="doodle small" style="left:10%; bottom:-30px; animation-duration: 22s;"></div>
+  <div class="doodle medium" style="left:40%; bottom:-40px; animation-duration: 28s;"></div>
+  <div class="doodle large" style="left:70%; bottom:-50px; animation-duration: 35s;"></div>
+
+  <div class="container">
+    <div class="toast" id="toast">Copied!</div>
+    <div class="key-box" id="key">sk-1234-5678-ABCD</div>
+    <button class="copy-btn" id="copyBtn">📋</button>
+  </div>
+
+  <script>
+    const copyBtn = document.getElementById("copyBtn");
+    const key = document.getElementById("key").innerText;
+    const toast = document.getElementById("toast");
+
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(key);
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 1500);
+      } catch (err) {
+        console.error("Failed to copy:", err);
+      }
+    });
+  </script>
+</body>
+</html>
+```
