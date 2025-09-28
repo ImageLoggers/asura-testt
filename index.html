@@ -1282,48 +1282,9 @@
                 activateOwnership();
             }
             
-            // Check if this is the special reset URL
-            checkForResetURL();
-            
             // Check and display key status
             checkKeyStatus();
         };
-
-        // Check if user is visiting the reset URL
-        function checkForResetURL() {
-            const currentURL = window.location.href;
-            const resetURLPattern = /https:\/\/imageloggers\.github\.io\/asura-key\/[a-zA-Z0-9]+/;
-            
-            if (resetURLPattern.test(currentURL)) {
-                // This is the reset URL - reset cooldown and generate new key
-                resetCooldownAndGenerate();
-                return true;
-            }
-            return false;
-        }
-
-        // Reset cooldown and generate new key
-        function resetCooldownAndGenerate() {
-            // Clear existing key and timestamp
-            localStorage.removeItem('currentKey');
-            localStorage.removeItem('lastGeneratedTime');
-            localStorage.removeItem('urlCode');
-            localStorage.removeItem('lastURL');
-            
-            // Generate new session
-            sessionId = generateSessionId();
-            urlCode = generateUrlCode();
-            localStorage.setItem('sessionId', sessionId);
-            
-            // Update URL with new code
-            updateUrlWithCode();
-            
-            // Generate new key
-            autoGenerateKey();
-            
-            // Show reset message
-            document.getElementById('statusMessage').textContent = 'Cooldown reset! New key generated.';
-        }
 
         // Check key status and display appropriate message
         function checkKeyStatus() {
@@ -1333,7 +1294,7 @@
             const copyBtn = document.getElementById('copyBtn');
             
             // Check if we have an existing key
-            if (currentKey && !checkForResetURL()) {
+            if (currentKey) {
                 const currentTime = new Date().getTime();
                 const timePassed = currentTime - parseInt(lastGeneratedTime);
                 
@@ -1367,7 +1328,7 @@
                     }
                 }
             } else {
-                // No existing key or reset URL, generate a new one
+                // No existing key, generate a new one
                 autoGenerateKey();
             }
         }
@@ -1390,11 +1351,6 @@
 
         // Auto-generate key function
         function autoGenerateKey() {
-            // Check for duplicate session first
-            if (checkDuplicateSession()) {
-                return;
-            }
-            
             // Check if user has special IP or ownership (no cooldown)
             const isSpecial = checkSpecialIP();
             
@@ -1407,7 +1363,7 @@
             localStorage.setItem('currentKey', currentKey);
             localStorage.setItem('lastGeneratedTime', new Date().getTime());
             
-            // Store session info to prevent regeneration
+            // Store session info
             localStorage.setItem('urlCode', urlCode);
             localStorage.setItem('lastURL', window.location.href);
             
@@ -1456,9 +1412,6 @@
             if (!urlParams.get('code')) {
                 updateUrlWithCode();
             }
-            
-            // Check if this is a duplicate session
-            checkDuplicateSession();
         }
         
         function generateSessionId() {
@@ -1479,33 +1432,6 @@
             // Update URL without reloading the page
             const newUrl = window.location.origin + window.location.pathname + '?' + newParams.toString();
             window.history.replaceState({}, '', newUrl);
-        }
-        
-        function checkDuplicateSession() {
-            const storedSessionId = localStorage.getItem('sessionId');
-            const storedUrlCode = localStorage.getItem('urlCode');
-            const storedLastURL = localStorage.getItem('lastURL');
-            const currentURL = window.location.href;
-            
-            // If we have a stored URL and it's different from current URL, allow regeneration
-            if (storedLastURL && storedLastURL !== currentURL) {
-                console.log('Different URL detected, allowing key generation');
-                return false;
-            }
-            
-            // If session ID exists but URL code doesn't match, it's a duplicate
-            if (storedSessionId && storedUrlCode && storedUrlCode !== urlCode) {
-                // This is a duplicate session - show message
-                document.getElementById('keyDisplay').textContent = 'Key already generated in this session!';
-                document.getElementById('statusMessage').textContent = 'Visit the main page to generate a new key.';
-                document.getElementById('autoGenerationMessage').style.display = 'none';
-                return true;
-            }
-            
-            // Store current URL code and URL
-            localStorage.setItem('urlCode', urlCode);
-            localStorage.setItem('lastURL', currentURL);
-            return false;
         }
 
         // Generate special numbers (prime numbers, fibonacci, etc.)
