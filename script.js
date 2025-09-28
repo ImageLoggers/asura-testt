@@ -132,7 +132,10 @@ function autoGenerateKey() {
     // Check if user returned from lootdest
     const hasReturnedFromRedirect = urlParams.toString().length > 0;
     if (hasReturnedFromRedirect) {
-        statusMessage.textContent = 'Welcome back! New key generated.';
+        // Generate new random URL code for the welcome back
+        const newUrlCode = generateUrlCode();
+        updateUrlWithCode(newUrlCode);
+        statusMessage.textContent = `Welcome back! New key generated. Your URL: ${window.location.href}`;
         // Clear URL parameters to prevent loop
         clearUrlParameters();
     } else {
@@ -176,7 +179,11 @@ function initializeUrlState() {
     }
 }
 
-function updateUrlWithCode() {
+function updateUrlWithCode(newCode = null) {
+    if (newCode) {
+        urlCode = newCode;
+    }
+    
     const newParams = new URLSearchParams();
     newParams.set('user', Math.floor(Math.random() * 10000000000).toString());
     newParams.set('t', Math.floor(Date.now() / 1000).toString());
