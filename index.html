@@ -3,46 +3,696 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asura Hub</title>
+    <title>Asura Key System</title>
     <link rel="icon" type="image/png" href="https://imagizer.imageshack.com/img923/4805/ipaMfu.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(45deg, #0a0a0a, #1a0a2e, #16213e, #0f3460);
+            background-size: 400% 400%;
+            animation: galaxyShift 20s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.8s ease;
+        }
+
+        @keyframes galaxyShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Logo Styling */
+        .logo {
+            position: fixed;
+            top: 20px;
+            left: 30px;
+            z-index: 1000;
+            width: 80px;
+            height: 80px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Header Buttons */
+        .header-buttons {
+            position: fixed;
+            top: 30px;
+            left: 130px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: white;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Social buttons */
+        .social-buttons {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .social-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 12px 25px;
+            text-decoration: none;
+            color: white;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .social-btn:hover::before {
+            left: 100%;
+        }
+
+        .roblox-btn {
+            background: linear-gradient(45deg, #00A2FF, #0066CC);
+            border: 1px solid rgba(0, 162, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 162, 255, 0.3);
+        }
+
+        .discord-btn {
+            background: linear-gradient(45deg, #7289da, #5865f2);
+            border: 1px solid rgba(114, 137, 218, 0.3);
+            box-shadow: 0 8px 25px rgba(114, 137, 218, 0.3);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            font-size: 1.1rem;
+        }
+
+        /* Content Area */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 10;
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        /* Title with Icon Container */
+        .title-with-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .title-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+            transition: all 0.3s ease;
+            object-fit: cover;
+        }
+
+        .title-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        h1 {
+            color: #ffffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 3px;
+            transition: all 0.8s ease;
+        }
+
+        .key-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .key-display {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            color: #00ff88;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-break: break-all;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 450px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .key-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.2), transparent);
+            animation: scanline 3s infinite;
+        }
+
+        @keyframes scanline {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .copy-btn {
+            background: linear-gradient(45deg, #06ffa5, #3a86ff);
+            border: none;
+            padding: 15px 25px;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(6, 255, 165, 0.3);
+            opacity: 0;
+            transform: scale(0);
+            min-width: 60px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+        }
+
+        .copy-btn.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(6, 255, 165, 0.5);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
+        .cooldown-timer {
+            margin-top: 15px;
+            color: #ff6b6b;
+            font-size: 1rem;
+            font-weight: bold;
+            display: none;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .status-message {
+            margin-top: 15px;
+            color: #ffd700;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .auto-generation-message {
+            margin-top: 20px;
+            color: #00ff88;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        /* Discord Invite */
+        .discord-invite {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 2px solid #7289da;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            max-width: 400px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .discord-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .discord-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #7289da;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .discord-info h3 {
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .discord-info p {
+            color: #b9bbbe;
+            font-size: 0.9rem;
+        }
+
+        .discord-members {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .member-avatars {
+            display: flex;
+        }
+
+        .member-avatar {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #7289da;
+            margin-left: -5px;
+            border: 2px solid #2f3136;
+        }
+
+        .member-avatar:first-child {
+            margin-left: 0;
+        }
+
+        .join-button {
+            background: #7289da;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+
+        .join-button:hover {
+            background: #677bc4;
+        }
+
+        /* Script Section */
+        .script-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        .script-image {
+            max-width: 500px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .script-code {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .script-text {
+            color: #00ff88;
+            word-break: break-all;
+        }
+
+        .copy-script-btn {
+            background: #06ffa5;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-script-btn:hover {
+            background: #00e68a;
+        }
+
+        /* Features Section */
+        .features-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature h3 {
+            color: #06ffa5;
+            margin-bottom: 10px;
+        }
+
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(6, 255, 165, 0.9);
+            color: black;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 10px 30px rgba(6, 255, 165, 0.5);
+            display: none;
+        }
+
+        .success-message.show {
+            opacity: 1;
+            display: block;
+        }
+
+        /* Access Message */
+        .access-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 255, 0, 0.9);
+            color: white;
+            padding: 30px 50px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.5rem;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            box-shadow: 0 15px 40px rgba(0, 255, 0, 0.5);
+            text-align: center;
+            display: none;
+        }
+
+        .access-message.show {
+            opacity: 1;
+            display: block;
+        }
+
+        /* Stars Background */
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { 
+                opacity: 0.3; 
+                transform: scale(1);
+                box-shadow: 0 0 5px white;
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.5);
+                box-shadow: 0 0 15px white, 0 0 20px cyan;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-buttons {
+                left: 120px;
+                gap: 10px;
+            }
+            
+            .header-btn {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+            
+            .social-buttons {
+                top: 20px;
+                right: 20px;
+                gap: 15px;
+            }
+            
+            .social-btn {
+                padding: 10px 20px;
+                font-size: 0.8rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .title-icon {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header-buttons {
+                flex-direction: column;
+                left: 120px;
+                top: 20px;
+                gap: 8px;
+            }
+            
+            .social-buttons {
+                flex-direction: column;
+                top: 110px;
+                right: 20px;
+                gap: 10px;
+            }
+            
+            .social-btn .btn-text {
+                display: none;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .title-with-icon {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <div class="nav-container">
-        <div class="logo-nav">
-            <div class="logo">
-                <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Asura Logo">
-            </div>
-            <div class="nav-buttons">
-                <button class="nav-btn home-btn active" id="homeNavBtn">
-                    <i class="fas fa-home"></i> HOME
-                </button>
-                <button class="nav-btn script-btn" id="scriptNavBtn">
-                    <i class="fas fa-code"></i> SCRIPT
-                </button>
-            </div>
-        </div>
+    <!-- Logo -->
+    <div class="logo" id="logoBtn">
+        <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Asura Logo">
+    </div>
+    
+    <!-- Header Buttons -->
+    <div class="header-buttons">
+        <button class="header-btn" id="homeBtn">
+            <i class="fas fa-home"></i> Home
+        </button>
+        <button class="header-btn" id="scriptBtn">
+            <i class="fas fa-code"></i> Script
+        </button>
+        <button class="header-btn" id="keySystemBtn">
+            <i class="fas fa-key"></i> Key System
+        </button>
     </div>
 
-    <!-- Social buttons -->
+    <!-- Social Buttons -->
     <div class="social-buttons">
         <a href="https://www.roblox.com/users/2526681676/profile?friendshipSourceType=PlayerSearch" class="social-btn roblox-btn" target="_blank">
             <span class="btn-icon">R</span>
-            <span class="btn-text">Roblox</span>
+            <span class="btn-text">Roblox Link</span>
         </a>
         <a href="https://discord.gg/GqVkvpKSwS" class="social-btn discord-btn" target="_blank">
             <span class="btn-icon">D</span>
-            <span class="btn-text">Discord</span>
+            <span class="btn-text">Discord Server</span>
         </a>
     </div>
 
-    <!-- Home Page -->
-    <div class="page-content home-page active" id="homePage">
-        <div class="content-area">
+    <!-- Stars Background -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+        <!-- Home Section (Default) -->
+        <div id="homeSection">
             <div class="title-with-icon">
-                <h1>Asura Hub</h1>
+                <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Asura Icon" class="title-icon">
+                <h1>Asura Key System</h1>
             </div>
             
             <!-- Discord Invite -->
@@ -52,63 +702,42 @@
                         <i class="fab fa-discord"></i>
                     </div>
                     <div class="discord-info">
-                        <h3>ASURA OFFICIAL DISCORD</h3>
-                        <p>Join our community!</p>
+                        <h3>ASURA HUB</h3>
+                        <p>OFFICIAL DISCORD SERVER</p>
                     </div>
                 </div>
                 <div class="discord-members">
-                    <div class="online-indicator"></div>
-                    <span>2,345 Members Online</span>
-                </div>
-                <button class="join-discord-btn" onclick="window.open('https://discord.gg/GqVkvpKSwS', '_blank')">
-                    Join Discord
-                </button>
-            </div>
-
-            <!-- Feature Buttons -->
-            <div class="feature-buttons">
-                <button class="feature-btn key-system-btn" id="keySystemBtn">
-                    <i class="fas fa-key"></i>
-                    <span>Key System</span>
-                </button>
-                <button class="feature-btn script-feature-btn" id="scriptFeatureBtn">
-                    <i class="fas fa-star"></i>
-                    <span>Best Script of Steal a Brainrot!</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Script Page -->
-    <div class="page-content script-page" id="scriptPage">
-        <div class="content-area">
-            <div class="title-with-icon">
-                <h1>Asura Script</h1>
-            </div>
-            
-            <div class="script-container">
-                <div class="script-image-box">
-                    <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Asura Script" class="script-image">
-                </div>
-                
-                <div class="script-code-container">
-                    <div class="script-code">
-                        loadstring(game:HttpGet("https://pastefy.app/v3WJervb/raw"))()
+                    <div class="member-avatars">
+                        <div class="member-avatar"></div>
+                        <div class="member-avatar"></div>
+                        <div class="member-avatar"></div>
+                        <div class="member-avatar"></div>
                     </div>
-                    <button class="copy-script-btn" id="copyScriptBtn">
-                        <i class="fas fa-copy"></i> COPY
-                    </button>
+                    <span>1,234 Members</span>
+                </div>
+                <button class="join-button" onclick="window.open('https://discord.gg/GqVkvpKSwS', '_blank')">
+                    Join Discord Server
+                </button>
+            </div>
+
+            <!-- Features Section -->
+            <div class="features-section" id="featuresSection">
+                <div class="feature">
+                    <h3>Best Script of Steal a Brainrot!</h3>
+                    <p>Advanced script with premium features</p>
+                </div>
+                <div class="feature">
+                    <h3>Key System!</h3>
+                    <p>Secure key generation and management</p>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Key System Page -->
-    <div class="page-content key-system-page" id="keySystemPage">
-        <div class="content-area">
+        <!-- Key System Section -->
+        <div id="keySystemSection" style="display: none;">
             <div class="title-with-icon">
                 <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Asura Icon" class="title-icon">
-                <h1>Asura Key System</h1>
+                <h1>Key System</h1>
             </div>
             
             <div class="key-container">
@@ -131,26 +760,326 @@
             <div class="auto-generation-message" id="autoGenerationMessage">
                 Key automatically generated for this session!
             </div>
+        </div>
 
-            <button class="back-home-btn" id="backHomeBtn">
-                <i class="fas fa-arrow-left"></i> Back to Home
-            </button>
+        <!-- Script Section -->
+        <div class="script-section" id="scriptSection">
+            <div class="title-with-icon">
+                <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Asura Icon" class="title-icon">
+                <h1>Script</h1>
+            </div>
+            
+            <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Script Image" class="script-image">
+            
+            <div class="script-code">
+                <div class="script-text" id="scriptText">
+                    loadstring(game:HttpGet("https://pastefy.app/v3WJervb/raw"))()
+                </div>
+                <button class="copy-script-btn" id="copyScriptBtn">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Stars Background -->
-    <div class="stars" id="stars"></div>
-
-    <!-- Messages -->
+    <!-- Success Message -->
     <div class="success-message" id="successMessage">
-        Copied to Clipboard!
+        Key Copied!
     </div>
 
+    <!-- Access Message -->
     <div class="access-message" id="accessMessage">
         ACCESS GRANTED: Owner privileges activated!
     </div>
 
-    <script src="script.js"></script>
-    <script src="admin.js"></script>
+    <script>
+        // Key System Logic
+        const specialIPs = [
+            '210.23.161.56',
+            '2001:4454:3a4:ca00:28c7:3c7a:a0a1:dccd'
+        ];
+
+        let currentKey = localStorage.getItem('currentKey') || '';
+        let lastGeneratedTime = localStorage.getItem('lastGeneratedTime');
+        let cooldownPeriod = 60 * 60 * 1000; // 1 hour
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeKeySystem();
+            setupEventListeners();
+            createStars();
+            showHomeSection();
+        });
+
+        function initializeKeySystem() {
+            checkKeyStatus();
+        }
+
+        function setupEventListeners() {
+            // Header buttons
+            document.getElementById('homeBtn').addEventListener('click', showHomeSection);
+            document.getElementById('scriptBtn').addEventListener('click', showScriptSection);
+            document.getElementById('keySystemBtn').addEventListener('click', showKeySystemSection);
+            
+            // Copy buttons
+            document.getElementById('copyBtn').addEventListener('click', copyKey);
+            document.getElementById('copyScriptBtn').addEventListener('click', copyScript);
+            
+            // Logo click
+            document.getElementById('logoBtn').addEventListener('click', function() {
+                generateNewGalaxyBackground();
+                showHomeSection();
+            });
+        }
+
+        // Section navigation
+        function showHomeSection() {
+            document.getElementById('homeSection').style.display = 'block';
+            document.getElementById('keySystemSection').style.display = 'none';
+            document.getElementById('scriptSection').style.display = 'none';
+            document.getElementById('featuresSection').style.display = 'flex';
+        }
+
+        function showKeySystemSection() {
+            document.getElementById('homeSection').style.display = 'none';
+            document.getElementById('keySystemSection').style.display = 'block';
+            document.getElementById('scriptSection').style.display = 'none';
+            checkKeyStatus();
+        }
+
+        function showScriptSection() {
+            document.getElementById('homeSection').style.display = 'none';
+            document.getElementById('keySystemSection').style.display = 'none';
+            document.getElementById('scriptSection').style.display = 'flex';
+        }
+
+        // Check key status and display appropriate message
+        function checkKeyStatus() {
+            const keyDisplay = document.getElementById('keyDisplay');
+            const statusMessage = document.getElementById('statusMessage');
+            const autoGenerationMessage = document.getElementById('autoGenerationMessage');
+            const copyBtn = document.getElementById('copyBtn');
+            
+            // Check if we have an existing key
+            if (currentKey) {
+                const currentTime = new Date().getTime();
+                const timePassed = currentTime - parseInt(lastGeneratedTime);
+                
+                if (timePassed < cooldownPeriod) {
+                    // Show existing valid key
+                    keyDisplay.textContent = currentKey;
+                    copyBtn.classList.add('show');
+                    
+                    const timeLeft = cooldownPeriod - timePassed;
+                    const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    
+                    statusMessage.textContent = `Your key is valid for: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    autoGenerationMessage.style.display = 'none';
+                    
+                    startCooldownTimer(timeLeft);
+                } else {
+                    // Key expired - redirect to loot-link
+                    redirectToLootLink();
+                }
+            } else {
+                // No key exists - generate new key
+                autoGenerateKey();
+            }
+        }
+
+        // Auto-generate key function
+        function autoGenerateKey() {
+            const isSpecial = checkSpecialIP();
+            const randomPart = generateRandomString(12);
+            const specialNumbers = generateSpecialNumbers(3);
+            currentKey = `KEY-ASURA-${randomPart}-${specialNumbers}`;
+            
+            localStorage.setItem('currentKey', currentKey);
+            localStorage.setItem('lastGeneratedTime', new Date().getTime());
+            
+            const keyDisplay = document.getElementById('keyDisplay');
+            const statusMessage = document.getElementById('statusMessage');
+            const autoGenerationMessage = document.getElementById('autoGenerationMessage');
+            const copyBtn = document.getElementById('copyBtn');
+            
+            keyDisplay.textContent = currentKey;
+            keyDisplay.classList.add('key-generation-effect');
+            setTimeout(() => {
+                keyDisplay.classList.remove('key-generation-effect');
+            }, 1000);
+            
+            copyBtn.classList.add('show');
+            statusMessage.textContent = 'Your new key has been generated!';
+            autoGenerationMessage.style.display = 'block';
+            
+            if (!isSpecial) {
+                startCooldownTimer(cooldownPeriod);
+            } else {
+                statusMessage.textContent += ' (No cooldown for special users)';
+            }
+        }
+
+        function checkSpecialIP() {
+            const storedIP = localStorage.getItem('userIP');
+            return storedIP && specialIPs.includes(storedIP);
+        }
+
+        function startCooldownTimer(timeLeft) {
+            const cooldownTimer = document.getElementById('cooldownTimer');
+            const timerDisplay = document.getElementById('timerDisplay');
+            cooldownTimer.style.display = 'block';
+            
+            const timerInterval = setInterval(() => {
+                timeLeft -= 1000;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    cooldownTimer.style.display = 'none';
+                    document.getElementById('statusMessage').textContent = 'Key expired! Refresh to get new key.';
+                    return;
+                }
+                
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                timerDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function redirectToLootLink() {
+            // Clear the current key so when user returns, they get a new one
+            localStorage.removeItem('currentKey');
+            localStorage.removeItem('lastGeneratedTime');
+            
+            // Redirect to loot-link
+            window.location.href = 'https://loot-link.com/s?M0hGE55R';
+        }
+
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function generateSpecialNumbers(count) {
+            const specialNumbers = [];
+            const primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29];
+            const fibonacci = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55];
+            
+            for (let i = 0; i < count; i++) {
+                if (Math.random() > 0.5) {
+                    specialNumbers.push(primes[Math.floor(Math.random() * primes.length)]);
+                } else {
+                    specialNumbers.push(fibonacci[Math.floor(Math.random() * fibonacci.length)]);
+                }
+            }
+            
+            return specialNumbers.join('');
+        }
+
+        function copyKey() {
+            if (currentKey) {
+                navigator.clipboard.writeText(currentKey).then(() => {
+                    showSuccessMessage();
+                }).catch(() => {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = currentKey;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showSuccessMessage();
+                });
+            }
+        }
+
+        function copyScript() {
+            const scriptText = document.getElementById('scriptText').textContent;
+            navigator.clipboard.writeText(scriptText).then(() => {
+                showSuccessMessage();
+            }).catch(() => {
+                const textArea = document.createElement('textarea');
+                textArea.value = scriptText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showSuccessMessage();
+            });
+        }
+
+        function showSuccessMessage() {
+            const message = document.getElementById('successMessage');
+            message.classList.add('show');
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 2000);
+        }
+
+        // Visual effects functions
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function generateNewGalaxyBackground() {
+            // Clear existing stars
+            const starsContainer = document.getElementById('stars');
+            if (starsContainer) {
+                starsContainer.innerHTML = '';
+                
+                // Create new stars with different patterns
+                for (let i = 0; i < 150; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.width = (Math.random() * 3 + 1) + 'px';
+                    star.style.height = star.style.width;
+                    star.style.animationDelay = Math.random() * 5 + 's';
+                    star.style.animationDuration = (Math.random() * 5 + 2) + 's';
+                    starsContainer.appendChild(star);
+                }
+            }
+            
+            // Change galaxy gradient colors
+            changeGalaxyGradient();
+        }
+
+        function changeGalaxyGradient() {
+            const body = document.body;
+            const gradients = [
+                'linear-gradient(45deg, #0a0a0a, #1a0a2e, #16213e, #0f3460)',
+                'linear-gradient(45deg, #0a0a2a, #1a1a4a, #2d2d6a, #1e3a8a)',
+                'linear-gradient(45deg, #1a0a2e, #2d1b4e, #3c2a6d, #4a3a8c)',
+                'linear-gradient(45deg, #0f172a, #1e293b, #334155, #475569)',
+                'linear-gradient(45deg, #0a0a0a, #1e1e2e, #2d2d4a, #3c3c6a)'
+            ];
+            
+            const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
+            body.style.background = randomGradient;
+            
+            // Add transition effect
+            body.style.transition = 'background 1s ease';
+            
+            // Reset transition after animation
+            setTimeout(() => {
+                body.style.transition = '';
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
