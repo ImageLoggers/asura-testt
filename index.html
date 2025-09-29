@@ -3,141 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asura Key System</title>
+    <title>Asura Hub</title>
     <link rel="icon" type="image/png" href="https://imagizer.imageshack.com/img923/4805/ipaMfu.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Logo -->
-    <div class="logo" id="logoBtn">
-        <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Asura Logo">
-    </div>
-    
-    <!-- Home Button -->
-    <button class="home-button" id="homeBtn">
-        <i class="fas fa-home"></i> HOME
-    </button>
-    
-    <!-- Milky Way Background -->
-    <div class="milky-way"></div>
-    <div class="milky-way-2"></div>
-    
-    <!-- Improved Sunny Background Elements -->
-    <div class="sun-doodle"></div>
-    <div class="cloud cloud-1"></div>
-    <div class="cloud cloud-2"></div>
-    <div class="cloud cloud-3"></div>
-    <div class="cloud cloud-4"></div>
-    
-    <!-- Static space elements -->
-    <div class="static-planet static-planet-1"></div>
-    <div class="static-planet static-planet-2"></div>
-    <div class="static-planet static-planet-3"></div>
-    
-    <!-- Improved Sunny Doodles -->
-    <div class="sunny-doodle" style="top: 15%; left: 10%;">
-        <div class="sunglasses"></div>
-    </div>
-    <div class="sunny-doodle" style="bottom: 10%; left: 20%;">
-        <div class="palm-tree"></div>
-    </div>
-    <div class="sunny-doodle" style="bottom: 25%; right: 30%;">
-        <div class="beach-ball"></div>
-    </div>
-    
-    <!-- Improved Rocket Doodle -->
-    <div class="rocket-doodle" style="top: 20%; left: 15%;">
-        <div class="rocket-body">
-            <div class="rocket-window"></div>
-            <div class="rocket-fin-left"></div>
-            <div class="rocket-fin-right"></div>
-            <div class="rocket-flame"></div>
-        </div>
-    </div>
-    
-    <div class="rocket-doodle" style="top: 70%; left: 80%; animation-delay: 5s;">
-        <div class="rocket-body">
-            <div class="rocket-window"></div>
-            <div class="rocket-fin-left"></div>
-            <div class="rocket-fin-right"></div>
-            <div class="rocket-flame"></div>
+    <!-- Navigation -->
+    <div class="nav-container">
+        <div class="logo-nav">
+            <div class="logo">
+                <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Asura Logo">
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn home-btn active" id="homeNavBtn">
+                    <i class="fas fa-home"></i> HOME
+                </button>
+                <button class="nav-btn script-btn" id="scriptNavBtn">
+                    <i class="fas fa-code"></i> SCRIPT
+                </button>
+            </div>
         </div>
     </div>
 
-    <div class="stars" id="stars"></div>
-    
-    <!-- Theme Toggle Button -->
-    <button class="theme-toggle" id="themeToggle">
-        <i class="fas fa-sun"></i> Sunny Theme
-    </button>
-    
+    <!-- Social buttons -->
     <div class="social-buttons">
         <a href="https://www.roblox.com/users/2526681676/profile?friendshipSourceType=PlayerSearch" class="social-btn roblox-btn" target="_blank">
             <span class="btn-icon">R</span>
-            <span class="btn-text">Roblox Link</span>
+            <span class="btn-text">Roblox</span>
         </a>
         <a href="https://discord.gg/GqVkvpKSwS" class="social-btn discord-btn" target="_blank">
             <span class="btn-icon">D</span>
-            <span class="btn-text">Discord Server</span>
+            <span class="btn-text">Discord</span>
         </a>
     </div>
 
-    <!-- Clean Content Area -->
-    <div class="content-area">
-        <!-- Title with Icon Container -->
-        <div class="title-with-icon">
-            <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Asura Icon" class="title-icon">
-            <h1>Asura Key System</h1>
-        </div>
-        
-        <div class="key-container">
-            <div class="key-display" id="keyDisplay">
-                Checking for existing key...
+    <!-- Home Page -->
+    <div class="page-content home-page active" id="homePage">
+        <div class="content-area">
+            <div class="title-with-icon">
+                <h1>Asura Hub</h1>
             </div>
-            <button class="copy-btn" id="copyBtn" title="Copy Key">
-                <i class="fas fa-copy"></i> COPY
-            </button>
-        </div>
-        
-        <div class="status-message" id="statusMessage">
-            Loading...
-        </div>
-        
-        <div class="cooldown-timer" id="cooldownTimer">
-            Next key available in: <span id="timerDisplay">01:00:00</span>
-        </div>
-        
-        <div class="auto-generation-message" id="autoGenerationMessage">
-            Key automatically generated for this session!
+            
+            <!-- Discord Invite -->
+            <div class="discord-invite">
+                <div class="discord-header">
+                    <div class="discord-icon">
+                        <i class="fab fa-discord"></i>
+                    </div>
+                    <div class="discord-info">
+                        <h3>ASURA OFFICIAL DISCORD</h3>
+                        <p>Join our community!</p>
+                    </div>
+                </div>
+                <div class="discord-members">
+                    <div class="online-indicator"></div>
+                    <span>2,345 Members Online</span>
+                </div>
+                <button class="join-discord-btn" onclick="window.open('https://discord.gg/GqVkvpKSwS', '_blank')">
+                    Join Discord
+                </button>
+            </div>
+
+            <!-- Feature Buttons -->
+            <div class="feature-buttons">
+                <button class="feature-btn key-system-btn" id="keySystemBtn">
+                    <i class="fas fa-key"></i>
+                    <span>Key System</span>
+                </button>
+                <button class="feature-btn script-feature-btn" id="scriptFeatureBtn">
+                    <i class="fas fa-star"></i>
+                    <span>Best Script of Steal a Brainrot!</span>
+                </button>
+            </div>
         </div>
     </div>
 
+    <!-- Script Page -->
+    <div class="page-content script-page" id="scriptPage">
+        <div class="content-area">
+            <div class="title-with-icon">
+                <h1>Asura Script</h1>
+            </div>
+            
+            <div class="script-container">
+                <div class="script-image-box">
+                    <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Asura Script" class="script-image">
+                </div>
+                
+                <div class="script-code-container">
+                    <div class="script-code">
+                        loadstring(game:HttpGet("https://pastefy.app/v3WJervb/raw"))()
+                    </div>
+                    <button class="copy-script-btn" id="copyScriptBtn">
+                        <i class="fas fa-copy"></i> COPY
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key System Page -->
+    <div class="page-content key-system-page" id="keySystemPage">
+        <div class="content-area">
+            <div class="title-with-icon">
+                <img src="https://imagizer.imageshack.com/img923/4805/ipaMfu.png" alt="Asura Icon" class="title-icon">
+                <h1>Asura Key System</h1>
+            </div>
+            
+            <div class="key-container">
+                <div class="key-display" id="keyDisplay">
+                    Checking for existing key...
+                </div>
+                <button class="copy-btn" id="copyBtn" title="Copy Key">
+                    <i class="fas fa-copy"></i> COPY
+                </button>
+            </div>
+            
+            <div class="status-message" id="statusMessage">
+                Loading...
+            </div>
+            
+            <div class="cooldown-timer" id="cooldownTimer">
+                Next key available in: <span id="timerDisplay">01:00:00</span>
+            </div>
+            
+            <div class="auto-generation-message" id="autoGenerationMessage">
+                Key automatically generated for this session!
+            </div>
+
+            <button class="back-home-btn" id="backHomeBtn">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </button>
+        </div>
+    </div>
+
+    <!-- Stars Background -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Messages -->
     <div class="success-message" id="successMessage">
-        Key Copied!
+        Copied to Clipboard!
     </div>
 
     <div class="access-message" id="accessMessage">
         ACCESS GRANTED: Owner privileges activated!
-    </div>
-
-    <!-- Updated Logo Popup -->
-    <div class="logo-popup" id="logoPopup">
-        <div class="popup-content">
-            <button class="close-popup" id="closePopup">&times;</button>
-            <h3>Asura Galaxy Hub</h3>
-            <div class="popup-buttons">
-                <button class="popup-btn" id="galaxyHubBtn">
-                    <i class="fas fa-rocket"></i> Enter Galaxy Hub
-                </button>
-                <button class="popup-btn" id="adminPanelBtn">
-                    <i class="fas fa-cog"></i> Admin Panel
-                </button>
-                <button class="popup-btn" id="settingsBtn">
-                    <i class="fas fa-sliders-h"></i> Settings
-                </button>
-            </div>
-        </div>
     </div>
 
     <script src="script.js"></script>
