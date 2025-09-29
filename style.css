@@ -74,6 +74,48 @@ body.sunny-theme {
     border: 2px solid rgba(255, 140, 0, 0.3);
 }
 
+/* Home Button Styles */
+.home-button {
+    position: fixed;
+    top: 110px; /* Position below the logo */
+    left: 30px;
+    z-index: 1000;
+    background: linear-gradient(45deg, #06ffa5, #3a86ff);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(6, 255, 165, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.sunny-theme .home-button {
+    background: linear-gradient(45deg, #ff8c00, #ff4500);
+    box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3);
+}
+
+.home-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(6, 255, 165, 0.5);
+}
+
+.sunny-theme .home-button:hover {
+    box-shadow: 0 8px 25px rgba(255, 140, 0, 0.5);
+}
+
+.home-button:active {
+    transform: translateY(0);
+}
+
 /* Milky Way Background */
 .milky-way {
     position: fixed;
@@ -1140,6 +1182,14 @@ h1 {
         height: 60px;
     }
     
+    .home-button {
+        top: 90px;
+        left: 15px;
+        padding: 10px 15px;
+        font-size: 0.8rem;
+        min-width: 100px;
+    }
+    
     .social-buttons {
         top: 20px;
         gap: 15px;
@@ -1294,4 +1344,72 @@ h1 {
 
 .popup-btn:hover {
     transform: translateY(-2px);
+}
+
+/* Welcome Message Styles */
+.welcome-message {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    margin-top: 20px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.welcome-message h2 {
+    color: #00ff88;
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.sunny-theme .welcome-message h2 {
+    color: #ff4500;
+    text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+}
+
+.welcome-message p {
+    color: #ffd700;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.sunny-theme .welcome-message p {
+    color: #ff8c00;
+}
+
+/* Restart Button */
+.restart-btn {
+    background: linear-gradient(45deg, #06ffa5, #3a86ff);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 15px;
+    color: white;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(6, 255, 165, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto;
+}
+
+.sunny-theme .restart-btn {
+    background: linear-gradient(45deg, #ff8c00, #ff4500);
+    box-shadow: 0 10px 30px rgba(255, 140, 0, 0.3);
+}
+
+.restart-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(6, 255, 165, 0.5);
+}
+
+.sunny-theme .restart-btn:hover {
+    box-shadow: 0 15px 40px rgba(255, 140, 0, 0.5);
 }
