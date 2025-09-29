@@ -347,3 +347,6 @@ function getClickPosition(e, size) {
     
     return { x, y };
 }
+
+// Make startCooldownTimer available globally for admin.js
+window.startCooldownTimer = startCooldownTimer;
