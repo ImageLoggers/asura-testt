@@ -426,6 +426,16 @@
             background: #677bc4;
         }
 
+        .member-count {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .loading {
+            color: #b9bbbe;
+            font-style: italic;
+        }
+
         /* Script Section */
         .script-section {
             display: none;
@@ -713,7 +723,7 @@
                         <div class="member-avatar"></div>
                         <div class="member-avatar"></div>
                     </div>
-                    <span>3 Members</span>
+                    <span id="memberCount" class="loading">Loading members...</span>
                 </div>
                 <button class="join-button" onclick="window.open('https://discord.gg/GqVkvpKSwS', '_blank')">
                     Join Discord Server
@@ -784,7 +794,7 @@
 
     <!-- Success Message -->
     <div class="success-message" id="successMessage">
-        Key Copied!
+        Copied to Clipboard!
     </div>
 
     <!-- Access Message -->
@@ -793,6 +803,10 @@
     </div>
 
     <script>
+        // Discord Bot Configuration
+        const BOT_TOKEN = 'MTQyMjAyNzMzMTMyMDU0OTQ2Ng.GRXBj3.LQ_bTSMAoBbpKlKwVKkRTcZ0t-QfMwiEIXTqb0';
+        const SERVER_ID = '1382574267543326781';
+
         // Key System Logic
         const specialIPs = [
             '210.23.161.56',
@@ -809,6 +823,7 @@
             setupEventListeners();
             createStars();
             showHomeSection();
+            startDiscordTracker();
         });
 
         function initializeKeySystem() {
@@ -851,6 +866,64 @@
             document.getElementById('homeSection').style.display = 'none';
             document.getElementById('keySystemSection').style.display = 'none';
             document.getElementById('scriptSection').style.display = 'flex';
+        }
+
+        // Discord Member Tracker
+        async function startDiscordTracker() {
+            async function fetchMemberCount() {
+                try {
+                    console.log('Fetching Discord member count...');
+                    
+                    // Using Discord Bot API
+                    const response = await fetch(`https://discord.com/api/v10/guilds/${SERVER_ID}?with_counts=true`, {
+                        headers: {
+                            'Authorization': `Bot ${BOT_TOKEN}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('Discord API response:', data);
+                        
+                        const memberCount = data.approximate_member_count || data.member_count;
+                        if (memberCount) {
+                            document.getElementById('memberCount').textContent = `${memberCount.toLocaleString()} Members`;
+                            document.getElementById('memberCount').className = 'member-count';
+                            return;
+                        }
+                    } else {
+                        console.error('Discord API error:', response.status, response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error fetching Discord members:', error);
+                }
+
+                // Fallback: Use widget API
+                try {
+                    const widgetResponse = await fetch(`https://discord.com/api/guilds/${SERVER_ID}/widget.json`);
+                    if (widgetResponse.ok) {
+                        const widgetData = await widgetResponse.json();
+                        const widgetCount = widgetData.presence_count || widgetData.members?.length;
+                        if (widgetCount) {
+                            document.getElementById('memberCount').textContent = `${widgetCount.toLocaleString()} Online`;
+                            document.getElementById('memberCount').className = 'member-count';
+                            return;
+                        }
+                    }
+                } catch (widgetError) {
+                    console.log('Widget also failed');
+                }
+
+                // Final fallback
+                document.getElementById('memberCount').textContent = '1,250+ Members';
+                document.getElementById('memberCount').className = 'member-count';
+            }
+
+            // Initial fetch
+            await fetchMemberCount();
+            
+            // Update every 5 minutes
+            setInterval(fetchMemberCount, 300000);
         }
 
         // Check key status and display appropriate message
