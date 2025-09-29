@@ -16,7 +16,87 @@ document.addEventListener('DOMContentLoaded', function() {
     verifyOwnership();
     setupLogoPopup();
     setupAdminCommands();
+    setupHomeButton();
 });
+
+// Home button functionality
+function setupHomeButton() {
+    const homeBtn = document.getElementById('homeBtn');
+    
+    // Add click event listener
+    homeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        clearAllButtons();
+    });
+}
+
+// Function to clear all key system buttons and elements
+function clearAllButtons() {
+    // Show loading effect
+    const keyDisplay = document.getElementById('keyDisplay');
+    const statusMessage = document.getElementById('statusMessage');
+    
+    if (keyDisplay) {
+        keyDisplay.textContent = 'Returning to Home...';
+        keyDisplay.style.color = '#00ffff';
+    }
+    
+    if (statusMessage) {
+        statusMessage.textContent = 'Clearing interface...';
+        statusMessage.style.color = '#00ffff';
+    }
+    
+    // Add ripple effect
+    createRippleEffect();
+    
+    // Remove all buttons and UI elements after a short delay
+    setTimeout(() => {
+        // Hide or remove key system elements
+        const elementsToHide = [
+            'keyDisplay', 'copyBtn', 'statusMessage', 
+            'cooldownTimer', 'autoGenerationMessage',
+            'themeToggle', 'social-buttons'
+        ];
+        
+        elementsToHide.forEach(elementId => {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+        
+        // Clear the content area but keep the title
+        const contentArea = document.querySelector('.content-area');
+        if (contentArea) {
+            const titleWithIcon = contentArea.querySelector('.title-with-icon');
+            contentArea.innerHTML = '';
+            if (titleWithIcon) {
+                contentArea.appendChild(titleWithIcon);
+            }
+            
+            // Add a welcome message
+            const welcomeMessage = document.createElement('div');
+            welcomeMessage.className = 'welcome-message';
+            welcomeMessage.innerHTML = `
+                <h2>Welcome to Asura Key System</h2>
+                <p>System ready for new session</p>
+                <button class="restart-btn" id="restartBtn">
+                    <i class="fas fa-redo"></i> Start New Session
+                </button>
+            `;
+            contentArea.appendChild(welcomeMessage);
+            
+            // Add restart button functionality
+            document.getElementById('restartBtn').addEventListener('click', function() {
+                location.reload();
+            });
+        }
+        
+        // Generate new galaxy background
+        generateNewGalaxyBackground();
+        
+    }, 1000);
+}
 
 // Logo click functionality
 function setupLogoPopup() {
